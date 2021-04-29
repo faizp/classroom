@@ -1,0 +1,22 @@
+{% extends 'classrooms/base.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-md-6 p-5 mt-5">
+        <img style="vertical-align: middle;" class="img-fluid" src="{% static 'images/TCC.jpg' %}" alt="">
+    </div>
+    <div style="display: grid; place-items: center;" class="col-md-6">
+        <div class="form-group text-center">
+            <h5 class="title">LOGIN TO CLASSROOM</h5>
+            <form style="width: 25em;" method="POST">
+                {% csrf_token %}
+             {{form | crispy}}
+             <button style="background-color: #2A7889; width: 8em;" class="btn mt-2 text-white" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
