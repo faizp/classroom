@@ -14,7 +14,7 @@
             <div class="alert alert-danger">{{messages}}</div>
             {% endfor %}
             {% endif %}
-            <form style="width: 35em;" method="POST">
+            <form style="width: 35em;" method="POST" novalidate>
                 {% csrf_token %}
              {{form | crispy}}
              <button style="background-color: #2A7889; width: 8em;" class="btn mt-2 text-white" type="submit">Sign Up</button>

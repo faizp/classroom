@@ -7,6 +7,7 @@ class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField(max_length= 10)
     last_name = forms.CharField(max_length=10)
+    
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         for fieldname in ['username', 'password1', 'password2']:
