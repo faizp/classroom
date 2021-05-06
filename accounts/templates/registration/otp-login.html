@@ -1,0 +1,122 @@
+{% extends 'classrooms/base.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 p-5 mt-5">
+        <img style="vertical-align: middle;" class="img-fluid" src="{% static 'images/TCC.jpg' %}" alt="">
+    </div>
+    <div style="display: grid; place-items: center;" class="col-md-6">
+            <form style="width: 70%;" novalidate>{% csrf_token %}
+                <h5 class="title text-center">SIGN IN WITH OTP</h5>
+                   <div class="form-group">
+                        <label for="exampleInputEmail1">Enter Your Mobile Number:</label>
+                        <div style="display: flex;"><input type="text" style="width: 8%;" class="form-control" value="+" readonly>
+                            <input type="text" style="width: 35%; margin-left: 3px;" id="country-code" pattern="\d*" class="form-control" placeholder="Country code" maxlength="2">
+                            <input style="width: 70%; margin-left: 3px" pattern="\d*" maxlength="10" type="text" id="phone" class="form-control" aria-describedby="emailHelp" placeholder="Enter registered phone number...">
+                            <button style="background-color: #2A7889; margin-left: 3px; width: 8em;" class="btn text-white" id="submit-phone" type="button">GET OTP</button></div>
+                            <small id="error" style="color: red;" class="form-text"></small><br>
+                        <label for="exampleInputEmail1">Enter the OTP:</label>
+                        <div class="cons" style="display: flex;">
+                            <input type="text" id="otp1" class="form-control text-center" pattern="\d*" style="width: 15%; margin-left: 2px;" maxlength="1" />
+                            <input type="text" id="otp2" class="form-control text-center" pattern="\d*" style="width: 15%; margin-left: 2px;" maxlength="1" />
+                            <input type="text" id="otp3" class="form-control text-center" pattern="\d*" style="width: 15%; margin-left: 2px;" maxlength="1" />
+                            <input type="text" id="otp4" class="form-control text-center" pattern="\d*" style="width: 15%; margin-left: 2px;" maxlength="1" />
+                            <input type="text" id="otp5" class="form-control text-center" pattern="\d*" style="width: 15%; margin-left: 2px;" maxlength="1" />
+                            <input type="text" id="otp6" class="form-control text-center" pattern="\d*" style="width: 15%; margin-left: 2px;" maxlength="1" />
+                            <button style="background-color: #2A7889; width: 8em; margin-left: 2px;" id="verify" class="btn text-white" type="button">VERIFY</button></div>
+                            <small id="otp-error" class="form-text" style="color: red; display: none;"></small>
+                            <small class="text-muted">see other login options <a style="text-decoration: none;" href="{% url 'login' %} ">Sign In</a></small>
+                  </div>
+            </form>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+     $('#submit-phone').click(function () {
+            var phone = $('#phone').val()
+            var code = $('#country-code').val()
+            let phone_number = code+phone
+            console.log(phone_number)
+            data = {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'phone': phone_number,
+            }
+            var error = false
+            if (phone == '') {
+                $('#error').html("Please enter a phone number")
+            }
+            else {
+                $.ajax({
+                    url: '/otp-login/',
+                    method: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data == 'false') {
+                            $('#error').html('<i class="fa fa-close"></i>Please enter a valid phone number')
+                        }
+                        if (data == 'true'){
+                            $('#submit-phone').prop('disabled', true)
+                            $('#error').css("color", "green")
+                            $('#error').html('<i class="fa fa-check-circle"></i>otp sent to your mobile number successfully')
+                        }
+                    }
+                })
+            }
+        })
+</script>
+<script>
+    var container = document.getElementsByClassName("cons")[0];
+container.onkeyup = function(e) {
+    var target = e.srcElement;
+    var maxLength = parseInt(target.attributes["maxlength"].value, 6);
+    var myLength = target.value.length;
+    if (myLength >= maxLength) {
+        var next = target;
+        while (next = next.nextElementSibling) {
+            if (next == null)
+                break;
+            if (next.tagName.toLowerCase() == "input") {
+                next.focus();
+                break;
+            }
+        }
+    }
+}
+</script>
+<script>
+    $('#verify').click(function() {
+        let otp1 = $('#otp1').val()
+        let otp2 = $('#otp2').val()
+        let otp3 = $('#otp3').val()
+        let otp4 = $('#otp4').val()
+        let otp5 = $('#otp5').val()
+        let otp6 = $('#otp6').val()
+        let otp = otp1+otp2+otp3+otp4+otp5+otp6
+        data = {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'otp-entered': otp,
+        }
+        if (otp1 == "" || otp2 == "" || otp3 == "" || otp4 == "" || otp5 == "" || otp6 == ""){
+            $('#otp-error').html('<i class="fa fa-close"></i>Please enter the otp')
+        }
+        else{
+            $.ajax({
+                    url: '/verify-otp/',
+                    method: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data == 'false') {
+                            $('#otp-error').html('<i class="fa fa-close"></i>OTP is not valid')
+                        }
+                        if (data == 'true'){
+                            window.location.replace('/')
+                        }
+                    }
+                })
+        }
+    })
+</script>
+{% endblock %}
