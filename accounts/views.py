@@ -25,8 +25,10 @@ def register(request):
                 if User.objects.filter(email=email).exists() or email == "":
                     messages.error(request, 'Email already exists Please provide different one')
                     return redirect('register')
-                form.save()
-                return redirect('index')
+                user = form.save()
+                Profile.objects.create(user=user)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect('profile-register')
         else:
             form = UserRegisterForm()
         return render(request, 'registration/register.html', {"form": form})
@@ -85,3 +87,18 @@ def verify_otp(request):
                 return JsonResponse('true', safe=False)
         return JsonResponse('false', safe=False)
     return redirect('index')
+
+
+def profile_register(request):
+    if request.method == 'POST':
+        profile = Profile.objects.get(user = request.user)
+        country = request.POST['country']
+        number = request.POST['phone']
+        profile.phone = country + number
+        profile.status = request.POST['status']
+        profile.company = request.POST['company']
+        profile.bio = request.POST['bio']
+        profile.image = request.POST['image']
+        profile.save()
+        return JsonResponse('true', safe=False)
+    return render(request, 'registration/profile-register.html')

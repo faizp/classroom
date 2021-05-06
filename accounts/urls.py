@@ -9,5 +9,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', views.register, name='register'),
     path('otp-login/', views.otp_login, name='otp-login'),
-    path('verify-otp/', views.verify_otp, name='verify-otp')
+    path('verify-otp/', views.verify_otp, name='verify-otp'),
+    path('profile-register/', views.profile_register, name='profile-register')
 ]
