@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'classrooms.apps.ClassroomsConfig',
-    
+    'admins.apps.AdminsConfig',
     'crispy_forms',
 
     'django.contrib.sites',
