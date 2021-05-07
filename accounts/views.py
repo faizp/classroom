@@ -102,3 +102,11 @@ def profile_register(request):
         profile.save()
         return JsonResponse('true', safe=False)
     return render(request, 'registration/profile-register.html')
+
+
+def profile(request):
+    profile = Profile.objects.get(user=request.user)
+    context = {
+        'profile': profile
+    }
+    return render(request, 'accounts/user-profile.html', context)
