@@ -15,6 +15,7 @@
       <div class="col-md-8 order-md-1">
         <h4 class="mb-3">We would love to know more about you:</h4>
         <div class="alert alert-danger text-center" style="display: none;">Please Fill the form</div>
+        <div id="phone-error" class="alert alert-danger text-center" style="display: none;">This phone number already exists</div>
           <div class="row">
             <div class="col-md-1 mb-3">
                 <label for=""></label>
@@ -88,6 +89,9 @@
                 success: function(data) {
                     if (data == 'true'){
                         window.location.replace('/')
+                    }
+                    if (data == 'false'){
+                      $('#phone-error').show()
                     }
                 }
             })

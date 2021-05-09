@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from classrooms.forms import CategoryForm
 
 # Create your views here.
 def admin_login(request):
@@ -16,3 +17,12 @@ def admin_login(request):
 
 def admin_home(request):
     return render(request, 'admins/admin-index.html')
+
+
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid:
+            return redirect('add-category')
+    form = CategoryForm()
+    return render(request, 'admins/add-category.html', {'form': form})
