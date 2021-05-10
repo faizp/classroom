@@ -96,7 +96,7 @@ def profile_register(request):
         profile.status = request.POST['status']
         profile.company = request.POST['company']
         profile.bio = request.POST['bio']
-        profile.image = request.POST['image']
+        profile.image = request.FILES.get('image')
         phone_entered = country + number
         if Profile.objects.filter(phone=phone_entered).exists():
             return JsonResponse('false', safe=False)

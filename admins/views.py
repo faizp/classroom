@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from classrooms.forms import CategoryForm
+from classrooms.models import Category, secCategory
+from django.core import serializers
+
 
 # Create your views here.
 def admin_login(request):
@@ -16,13 +19,34 @@ def admin_login(request):
     return render(request, 'admins/admin-login.html')
 
 def admin_home(request):
-    return render(request, 'admins/admin-index.html')
+    return render(request, 'admins/dashboard.html')
 
 
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
-        if form.is_valid:
+        print(form)
+        if form.is_valid():
+            form.save()
             return redirect('add-category')
+
     form = CategoryForm()
-    return render(request, 'admins/add-category.html', {'form': form})
+    categories = Category.objects.all()
+    context = {
+        'form': form,
+        'categories': categories
+    }
+    return render(request, 'admins/category.html', context)
+
+
+def sec_category(request):
+    if request.method == 'POST':
+        category = request.POST['category']
+        category_selected = Category.objects.get(id=category)
+        result_category = secCategory.objects.filter(category=category_selected)
+        cateogories = serializers.serialize('json', result_category)
+        data = {
+            'categories': cateogories
+        }
+        return JsonResponse(data)
+    return JsonResponse('false', safe=False)

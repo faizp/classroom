@@ -10,11 +10,11 @@
           <span class="badge badge-secondary badge-pill">3</span>
         </h4>
         <img class="border-dark p-1 shadow img-fluid" style="width: 20em; height: 20em" id="img1" src="{% static 'images/default.jpg' %}" alt="">
-        <input class="form-control-file mt-2" id="imgFile" onchange="loadFile(event)" type="file">
+        <input class="form-control-file mt-2" id="imgFile" onchange="loadFile(event)" type="file" required>
       </div>
       <div class="col-md-8 order-md-1">
         <h4 class="mb-3">We would love to know more about you:</h4>
-        <div class="alert alert-danger text-center" style="display: none;">Please Fill the form</div>
+        <div id="form-error" class="alert alert-danger text-center" style="display: none;">Please Fill the form</div>
         <div id="phone-error" class="alert alert-danger text-center" style="display: none;">This phone number already exists</div>
           <div class="row">
             <div class="col-md-1 mb-3">
@@ -63,28 +63,29 @@
 {% block script %}
 <script>
     function submitForm() {
-        let country = $('#country-code').val()
-        let phone = $('#phone-number').val()
-        let status = $('#status').val()
-        let company = $('#company').val()
-        let bio = $('#bio').val()
-        let image = $('#imgFile').val()
-        let data = {
-            'csrfmiddlewaretoken': '{{csrf_token}}',
-            'country': country,
-            'phone': phone,
-            'status': status,
-            'company': company,
-            'bio': bio,
-            'image': image
+      var formData = new FormData();
+      formData.append('country', document.getElementById('country-code').value);
+      formData.append('phone', document.getElementById('phone-number').value);
+      formData.append('status', document.getElementById('status').value);
+      formData.append('company', document.getElementById('company').value);
+      formData.append('bio', document.getElementById('bio').value);
+      formData.append('image', document.getElementById('imgFile').files[0]);
+      formData.append('csrfmiddlewaretoken', '{{csrf_token}}');
+        var error = false
+        for (var value of formData.values()) {
+          if (value == ""){
+            error = true
+          }
         }
-        if (country == "" || phone == "" || status == "" || company == "" || bio == "" || image == ""){
-            $('.alert-danger').show()
+        if (error === true){
+            $('#form-error').show()
         } else {
             $.ajax({
                 url: '/profile-register/',
                 method: 'POST',
-                data: data,
+                data: formData,
+                contentType: false,
+                processData: false,
                 dataType: 'json',
                 success: function(data) {
                     if (data == 'true'){
