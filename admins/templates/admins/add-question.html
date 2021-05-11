@@ -1,0 +1,173 @@
+{% extends 'admins/admin-base.html' %}
+{% block content %}
+<div class="page-breadcrumb bg-white">
+    <div class="row align-items-center">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            <h4 class="page-title">Category Test</h4>
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+            <div class="d-md-flex">
+                <ol class="breadcrumb ms-auto">
+                    <li><a href="#" class="fw-normal">Category Test</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+  </div>
+  <div class="container-fluid">
+    <h3 class="mt-3">Add Question:</h3>
+    <section id="question-section">
+        <form>
+            <div class="row">
+              <div class="col">
+                <select id="category" onchange="showCategories()" class="form-control">
+                    <option value="">Choose Category</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+              <div class="col">
+                <select style="display: none;" id="sub-category" class="form-control" required>
+                  </select>
+              </div>
+            </div>
+            <div class="form-group mt-3">
+                <label for="question">Write the question:</label>
+                <input type="text" class="form-control" id="question" placeholder="eg: what is python?" required>
+              </div>
+              <div class="form-group">
+                  <div style="justify-content: space-between; display: flex;">
+                    <label for="answer1">Answers</label><label for="answer1">Choose answer correct or wrong</label>
+                  </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control mt-1" id="answer1" placeholder="1" required>
+                    </div>
+                    <div class="col">
+                        <select class="form-control" id="answeropt1">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control mt-1" id="answer2" placeholder="2" required>
+                    </div>
+                    <div class="col">
+                        <select class="form-control" id="answeropt2">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control mt-1" id="answer3" placeholder="3" required>
+                    </div>
+                    <div class="col">
+                        <select class="form-control" id="answeropt3">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control mt-1" id="answer4" placeholder="4" required>
+                    </div>
+                    <div class="col">
+                        <select class="form-control" id="answeropt4">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                    </div>
+                </div>   
+              </div>
+              <button class="btn btn-success" onclick="addQuestion()" type="button">SUBMIT QUESTION</button>
+          </form>
+    </section>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+    function showCategories(){
+        category = $('#category').val()
+        $.ajax({
+            url: '/admin/choose-category/',
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'category': category
+            },
+            dataType: 'json',
+            success: function(data){
+                data1 = JSON.parse(data.categories)
+                console.log(data)
+                $('#sub-category').show()
+                $('#sub-category').html('')
+                for (var i=0; i<data1.length; i++) {
+                    $('#sub-category').append('<option value="'+data1[i].pk+'">'+data1[i].fields.name+'</option>')
+                }
+        }
+        })
+    }
+</script>
+<script>
+    function addQuestion(){
+        var subCategory = $('#sub-category').val()
+        var question1 = $('#question').val()
+        var answer1 = $('#answer1').val()
+        var answer2 = $('#answer2').val()
+        var answer3 = $('#answer3').val()
+        var answer4 = $('#answer4').val()
+        var answeropt1 = $('#answeropt1').val()
+        var answeropt2 = $('#answeropt2').val()
+        var answeropt3 = $('#answeropt3').val()
+        var answeropt4 = $('#answeropt4').val()
+        var data = {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'question1': question1,
+            'answer1': answer1,
+            'answer2': answer2,
+            'answer3': answer3,
+            'answer4': answer4,
+            'answeropt1': answeropt1,
+            'answeropt2': answeropt2,
+            'answeropt3': answeropt3,
+            'answeropt4': answeropt4,
+            'subCategory': subCategory
+        }
+        console.log(subCategory)
+        if (subCategory == null || question1 == "" || answer1 == "" || answer2 == "" || answer3 == "" || answer4 == "" || answeropt1 == "" || answeropt2 == "" || answeropt3 == "" || answeropt4 == ""){
+            swal({
+                title: "Please Fill the form",
+                icon: "error"
+            })
+        }else{
+        $.ajax({
+            url: '/admin/add-question/',
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(data){
+                console.log(data)
+                if (data == 'false'){
+                    swal({
+                        title: "Please Choose One correct answer for the question",
+                        icon: "error"
+                    })
+                }
+                if (data == 'true'){
+                    window.location.reload()
+                }
+                
+            }
+        })
+    }
+}
+</script>
+{% endblock %}

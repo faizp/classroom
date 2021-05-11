@@ -23,7 +23,9 @@
       </div>
       {% endfor %}
     </div>
-    <h3 class="mt-3">Questions:</h3>
+    <div style="justify-content: space-between; display: flex; height: 2.5em;">
+    <h3 class="mt-3">Questions:</h3><a href="{% url 'add-question' %}" class="btn btn-success text">+Add Question</a>
+    </div>
     <section id="question-section">
         
     </section>
@@ -41,7 +43,7 @@
                 console.log(data1)
                 for (var i=0; i<data1.length; i++) {
                     var j = i+1
-                    $('#question-section').append('<div style="width: 100%;" class="card mt-3"><div class="card-body"><h5 class="card-title">Question '+j+':</h5><p class="card-text">'+ data1[i].fields.question+'</p><p id="answer-section" class="card-text"><ul id="answer-list" class="list-group"></ul></p><button type="button" onclick="showAnswers('+data1[i].pk+')" class="btn btn-primary">Show Answers</button></div></div>')
+                    $('#question-section').append('<div style="width: 100%;" class="card mt-3"><div class="card-body"><h5 class="card-title">Question '+j+':</h5><p class="card-text">'+ data1[i].fields.question+'</p><p id="answer-section" class="card-text"><ul id="answer-list'+data1[i].pk+'" class="list-group"></ul></p><button type="button" onclick="showAnswers('+data1[i].pk+')" class="btn btn-primary">Show Answers</button></div></div>')
             }
         }
         })
@@ -57,11 +59,11 @@
                 $('#answer-section').html('')
                 data1 = JSON.parse(data.answers)
                 for (var i=0; i<data1.length; i++){
-                    $('#answer-section').append('<li class="list-group-item">'+data1[i].fields.answer+'</li><br>')
+                    $('#answer-list'+data1[i].fields.question).append('<li class="list-group-item">'+data1[i].fields.answer+'</li><br>')
                 }
                 $('#answer-list').html('')
                 data2 = JSON.parse(data.correctAnswer)
-                $('#answer-list').append('<p class="card-text">Answer:'+data2[0].fields.answer+'</p>')
+                // $('#answer-list'+data1[i].fields.question).append('<p class="card-text">Answer:'+data2[0].fields.answer+'</p>')
             }
         })
     }
