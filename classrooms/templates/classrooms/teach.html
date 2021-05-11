@@ -1,0 +1,103 @@
+{% extends 'classrooms/base.html' %}
+{% block content %}
+<div class="row p-3">
+    <div class="col-12">
+        <div style="background-color: rgb(255, 255, 255); height: 80vh; width: 100%;" class="card shadow">
+        <section>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                
+            <h3 class="text-center" style="margin-top: 4em;">Choose what you want to Teach:</h3>
+            <div class="row">
+                <div class="col-4">
+                  <select style="width: 15em; margin-left: 7em; margin-top: 2em;" id="category" onchange="showCategories()" class="form-control">
+                      <option>Choose Category</option>
+                      {% for category in categories %}
+                      <option value="{{ category.id }}">{{ category }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                </div>
+                <br>
+                <div class="row">
+                <div class="col-4">
+                  <select style="display: none; width: 15em; margin-left: 7em;" id="sub-category" class="form-control" required>
+                    </select>
+                </div>
+                <small style="margin-top: 5em;" class="text-muted text-center">You Need to pass test to teach</small>
+                <button onclick="takeTest()" class="btn btn-primary">TAKE TEST</button>
+                <a id="create-classroom" href="{% url 'create-classroom' %}" style="display: none;" class="btn btn-success mt-1">CREATE CLASSROOM</a>
+            </div>
+                <div class="col-md-4"></div>
+            </div>
+        </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function showCategories(){
+        category = $('#category').val()
+        $.ajax({
+            url: '/admin/choose-category/',
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'category': category
+            },
+            dataType: 'json',
+            success: function(data){
+                data1 = JSON.parse(data.categories)
+                console.log(data)
+                $('#sub-category').show()
+                $('#sub-category').html('')
+                for (var i=0; i<data1.length; i++) {
+                    $('#sub-category').append('<option value="'+data1[i].pk+'">'+data1[i].fields.name+'</option>')
+                }
+        }
+        })
+    }
+</script>
+<script>
+    function takeTest(){
+        var category = $('#sub-category').val()
+        var data = {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'category': category
+        }
+        if (category == null){
+            swal({
+                title: "Please choose a valid category",
+                icon: "error"
+            })
+        } else {
+            $.ajax({
+                url: '/teach/',
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function(data){
+                    if (data == 'true'){
+                        window.location.replace('/test/')
+                    }
+                    if (data == 'passed'){
+                        swal({
+                            title: "You have Already passed Test for this category",
+                            icon: "success"
+                        })
+                        $('#create-classroom').show()
+                    }
+                    if (data == 'false'){
+                        swal({
+                            title: "we haven't created test for this category yet",
+                            icon: "info"
+                        })
+                    }
+                }
+            })
+        }
+    }
+</script>
+{% endblock %}

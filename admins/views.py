@@ -100,25 +100,9 @@ def add_question(request):
         answer3 = request.POST['answer3']
         answer4 = request.POST['answer4']
         answeropt1 = request.POST['answeropt1']
-        if answeropt1 == 'true':
-            answeropt1 = True
-        else:
-            answeropt1 = False
         answeropt2 = request.POST['answeropt2']
-        if answeropt2 == 'true':
-            answeropt2 = True
-        else:
-            answeropt2 = False
         answeropt3 = request.POST['answeropt3']
-        if answeropt3 == 'true':
-            answeropt3 = True
-        else:
-            answeropt3 = False
         answeropt4 = request.POST['answeropt4']
-        if answeropt4 == 'true':
-            answeropt4 = True
-        else:
-            answeropt4 = False
         count = 0
         lis = [answeropt1, answeropt2, answeropt3, answeropt4]
         for i in range(len(lis)):

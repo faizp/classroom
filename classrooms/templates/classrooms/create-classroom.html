@@ -1,0 +1,82 @@
+{% extends 'classrooms/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container p-3">
+    <div class="card p-5 shadow-lg ">
+      <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <div class="row">
+      <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Upload Video</span>
+          <span class="badge badge-secondary badge-pill">3</span>
+        </h4>
+        <input id="video" name="video" required type="file" accept="video/*">
+      <video id="video-player" width="300" height="250" controls></video>
+      </div>
+      <div class="col-md-8 order-md-1">
+        <h4 class="mb-3">CREATE CLASSROOM</h4>
+          <div class="row">
+            <div class="col-8 mb-3">
+              <label for="lastName">Classroom Title:</label>
+              <input type="text" maxlength="36" class="form-control text-center" name="title" id="title" required>
+            </div>
+            <div class="col-4 mb-3">
+              <label for="lastName">No: of students</label>
+              <input type="text" pattern="\d*" maxlength="3" class="form-control text-center" name="student-number" id="student-number" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="email">Language</label>
+            <input type="text" class="form-control" name="language" id="language" placeholder="eg: English">
+          </div>
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-8 mb-3">
+                <label for="lastName">Start Date</label>
+                <input type="date" pattern="\d*" maxlength="10" name="start-date" class="form-control text-center" id="phone-number" required>
+              </div>
+              <div class="col-4 mb-3">
+                <label for="lastName">Duration</label>
+                <input type="text" pattern="\d*" maxlength="10" name=duration class="form-control text-center" placeholder="Duration in days" id="duration" required>
+              </div>
+            </div>
+          </div>  
+          <div class="mb-3">
+            <label for="address2">Description<span class="text-muted"></span></label>
+            <textarea rows='3' name="description" class="form-control" id="bio"></textarea>
+          </div>
+          <hr class="mb-4">
+          <div class="container">
+          <button class="btn btn-lg btn-block" style="width: 100%; background-color: #2A7889; color: white;" type="submit">CREATE CLASSROOM</button>
+        </div>
+      </div>
+    </form>
+    </div>
+    </div>
+    <script>
+        const input = document.getElementById('video');
+        const video = document.getElementById('video-player');
+        const videoSource = document.createElement('source');
+
+        input.addEventListener('change', function() {
+          const files = this.files || [];
+
+          if (!files.length) return;
+          
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            videoSource.setAttribute('src', e.target.result);
+            video.appendChild(videoSource);
+            video.load();
+            video.play();
+          };
+          
+          reader.onprogress = function (e) {
+            console.log('progress: ', Math.round((e.loaded * 100) / e.total));
+          };
+          
+          reader.readAsDataURL(files[0]);
+        });
+    </script>
+{% endblock %} 

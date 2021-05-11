@@ -1,0 +1,39 @@
+{% extends 'classrooms/base.html' %}
+{% block content %}
+<div class="container-fluid p-5">
+<div class="card">
+    <div class="row p-5">
+        <div class="col-12">
+            <h3 class="text-center">Questions: </h3>
+            <form>
+            {% for question in questions %}
+            Q:{{ forloop.counter}}
+            <input value="{{question.id}}" id="qst" type="text" style="display: none;">
+            <h6>{{question.question}}</h6>
+            {% for answer in answers %}
+            {% if questions.question.id == answer.question.id %}
+            {% for answer in answer %}
+            <div class="form-check">
+                <input class="form-check-input" type="radio" onselect="submitAnswer()" name="flexRadioDefault" id="answer" value="{{ answer.id }}">
+                <label class="form-check-label" for="flexRadioDefault1">
+                  {{answer.answer}}
+                </label>
+              </div>
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+            <button class="btn btn-success" onclick="submitAnswer('{{question.id}}')" type="button">SUBMIT ANSWER</button>
+            {% endfor %}
+        </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function submitAnswer(id){
+        
+    }
+</script>
+{% endblock %}
