@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from classrooms.forms import CategoryForm
-from classrooms.models import Category, secCategory
+from classrooms.models import Category, secCategory, Questions, Answer
 from django.core import serializers
 
 
@@ -50,3 +50,44 @@ def sec_category(request):
         }
         return JsonResponse(data)
     return JsonResponse('false', safe=False)
+
+
+def instructor_test(request):
+    categories = Category.objects.all()
+    print(categories)
+    context = {
+        'categories': categories
+    }
+    return render(request, 'admins/instructor-test.html', context)
+
+
+def category_test(request, id):
+    category = Category.objects.get(id=id)
+    categories = secCategory.objects.filter(category=category)
+    context = {
+        'categories': categories
+    }
+    return render(request, 'admins/category-test.html', context)
+
+
+def questions(request, id):
+    sec_category = secCategory.objects.get(id=id)
+    questions = Questions.objects.filter(sec_category=sec_category)
+    if questions == None:
+        return JsonResponse('false', safe=False)
+    data = {
+        'questions': serializers.serialize('json', questions)
+    }
+    return JsonResponse(data)
+
+
+def answers(request, id):
+    question = Questions.objects.get(id=id)
+    answers = Answer.objects.filter(question=question)
+    correct_answer = Answer.objects.filter(question=question, correct=True)
+    print(correct_answer)
+    data = {
+        'answers': serializers.serialize('json', answers),
+        'correctAnswer': serializers.serialize('json', correct_answer)
+    }
+    return JsonResponse(data)

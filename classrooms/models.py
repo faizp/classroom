@@ -22,4 +22,5 @@ class Questions(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=256, null=True)
     correct = models.BooleanField()

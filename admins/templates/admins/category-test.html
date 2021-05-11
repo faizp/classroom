@@ -1,0 +1,69 @@
+{% extends 'admins/admin-base.html' %}
+{% block content %}
+<div class="page-breadcrumb bg-white">
+    <div class="row align-items-center">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            <h4 class="page-title">Category Test</h4>
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+            <div class="d-md-flex">
+                <ol class="breadcrumb ms-auto">
+                    <li><a href="#" class="fw-normal">Category Test</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+  </div>
+  <div class="container-fluid">
+      <div class="row">
+      {% for category in categories %}
+      <div class="col-md-2">
+          <button style="width: 10em; height: 3em;" onclick="showQuestions('{{category.id}}')" class="btn btn-danger rounded shadow-lg">{{ category }}</button>
+      </div>
+      {% endfor %}
+    </div>
+    <h3 class="mt-3">Questions:</h3>
+    <section id="question-section">
+        
+    </section>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+    function showQuestions(id){
+        $.ajax({
+            url: '/admin/questions/'+id,
+            method: 'GET',
+            success: function(data){
+                $('#question-section').html('')
+                data1 = JSON.parse(data.questions)
+                console.log(data1)
+                for (var i=0; i<data1.length; i++) {
+                    var j = i+1
+                    $('#question-section').append('<div style="width: 100%;" class="card mt-3"><div class="card-body"><h5 class="card-title">Question '+j+':</h5><p class="card-text">'+ data1[i].fields.question+'</p><p id="answer-section" class="card-text"><ul id="answer-list" class="list-group"></ul></p><button type="button" onclick="showAnswers('+data1[i].pk+')" class="btn btn-primary">Show Answers</button></div></div>')
+            }
+        }
+        })
+    }
+</script>
+<script>
+    function showAnswers(id){
+        $.ajax({
+            url: '/admin/answers/'+id,
+            method: 'GET',
+            success: function(data){
+                console.log(data)
+                $('#answer-section').html('')
+                data1 = JSON.parse(data.answers)
+                for (var i=0; i<data1.length; i++){
+                    $('#answer-section').append('<li class="list-group-item">'+data1[i].fields.answer+'</li><br>')
+                }
+                $('#answer-list').html('')
+                data2 = JSON.parse(data.correctAnswer)
+                $('#answer-list').append('<p class="card-text">Answer:'+data2[0].fields.answer+'</p>')
+            }
+        })
+    }
+</script>
+{% endblock %}
