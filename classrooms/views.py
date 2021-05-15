@@ -1,12 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .models import Category, secCategory, Questions, Answer, TestPassed, Classroom
+from django.contrib.auth.decorators import login_required
+from .models import Category, secCategory, Questions, Answer, TestPassed, Classroom, Day
 
 # Create your views here.
 def index(request):
-    return render(request, 'classrooms/index.html')
+    classrooms = Classroom.objects.all()
+    context = {
+        'classrooms': classrooms
+    }
+    return render(request, 'classrooms/index.html', context)
 
 
+@login_required
 def teach(request):
     if request.method == 'POST':
         category = request.POST['category']
@@ -24,11 +30,12 @@ def teach(request):
     return render(request, 'classrooms/teach.html', context)
 
 
+@login_required
 def test(request):
     if request.session.has_key('secCategory'):
         category = request.session['secCategory']
         sec_category = secCategory.objects.get(id=category)
-        questions = Questions.objects.filter(sec_category = sec_category)[:1]
+        questions = Questions.objects.filter(sec_category = sec_category)   
         answers = []
         for question in questions:
             answer = Answer.objects.filter(question=question)
@@ -40,6 +47,7 @@ def test(request):
     return render(request, 'classrooms/test.html', context)
 
 
+@login_required
 def create_classroom(request):
     if request.method == 'POST':
         video = request.FILES.get('video')
@@ -57,6 +65,7 @@ def create_classroom(request):
     return render(request, 'classrooms/create-classroom.html')
 
 
+@login_required
 def classroom_tutor(request, id):
     classroom = Classroom.objects.get(id=id)
     context = {
@@ -65,5 +74,40 @@ def classroom_tutor(request, id):
     return render(request, 'classrooms/classroom-tutor.html', context)
 
 
-def manage_days(request):
-    return render(request, 'classrooms/manage-days.html')
+@login_required
+def manage_days(request, id):
+    classroom = Classroom.objects.get(id=id)
+    days = Day.objects.filter(classroom=classroom)
+    context = {
+        'classroom': classroom,
+        'days': days
+    }
+    return render(request, 'classrooms/manage-days.html', context)
+
+
+@login_required
+def add_day(request, id):
+    if request.method == 'POST':
+        video = request.FILES.get('video')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        classroom = Classroom.objects.get(pk=id)
+        Day.objects.create(classroom=classroom, video=video, video_title=title, description=description)
+        return redirect('manage-days',id)
+    return render(request, 'classrooms/add-day.html')
+
+
+@login_required
+def join_classroom(request, id):
+    if Classroom.objects.get(id=id).user == request.user:
+        return redirect('classroom-tutor',id)
+    else:
+        return redirect('classroom-student',id)
+
+
+def classroom_student(request, id):
+    classroom = Classroom.objects.get(id=id)
+    context = {
+        'classroom': classroom
+    }
+    return render(request, 'classrooms/classroom-student.html', context)

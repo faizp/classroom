@@ -50,28 +50,18 @@
                             </table>
                         </div>
                     </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
                 </div>
             </div>
 
 
         </div>
         <div class="col-md-6">
-            <!-- <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="categories">Select Cateogory</label>
-                    <select class="form-control" name="category" id="categories">
-                    {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category }}</option>
-                    {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="sec-category">Enter Name:</label>
-                    <input type="text" maxlength="36" required/>
-                </div>
-                <button type="submit" class="btn btn-success">Submit</button>
-            </form> -->
+            
 
             <div class="row">
                 <div class="col-sm-12">
@@ -109,6 +99,22 @@
                         </div>
                     </div>
                 </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="categories">Select Cateogory</label>
+                        <select class="form-control" name="category" id="categories">
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sec-category">Enter Name:</label>
+                        <input type="text" maxlength="36" required/>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
             </div>
         </div>
     </div> 
@@ -124,11 +130,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <form method="post">
-                {% csrf_token %}
-                {{ form | crispy }}
-                <button type="submit" class="btn btn-success">Submit</button>
-            </form>
+           
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -158,7 +160,7 @@
                 for (var i=0; i<data1.length; i++){
                     console.log(data1[0].fields.name)
                     var j = i+1
-                    $('#secCtgry').append('<tr><td>'+j+'</td><td>'+data1[0].fields.name+'</td><td><button class="btn btn-success">Edit</button></td><td><button class="btn btn-danger">Delete</button></td></tr>')
+                    $('#secCtgry').append('<tr><td>'+j+'</td><td>'+data1[i].fields.name+'</td><td><button class="btn btn-success">Edit</button></td><td><button class="btn btn-danger">Delete</button></td></tr>')
 
                 }
             }

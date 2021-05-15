@@ -1,10 +1,52 @@
 {% extends 'classrooms/base.html' %}
+{% load static %}
 {% block content %}
+<div class="container">
 <div class="row p-3">
-    <div class="col-12">
-        <div style="background-color: #2A7889; height: 55vh;" class="card shadow"></div>
+    <div class="col-md-6">
+        <p class="h1" style="font-family: sans-serif;position: absolute; top: 50%;"><b> Learn the latest digital skills<br>
+            from <span style="color: #2A7889; font-family: cursive;"> classroom</span>.</b>
+        </p>
     </div>
-<a style="background-color: #2A7889; width: 10em;margin-left: 1em; margin-top: 1em;" class="btn text-white ml-3 shadow">I WANT TO LEARN</a>
-<a href="{% url 'teach' %}" style="background-color: #2A7889; width: 10em;margin-left: 1em; margin-top: 1em;" class="btn text-white ml-3 shadow">I WANT TO TEACH</a>
+    <div class="col-md-6">
+        <img class="img-fluid" src="{% static 'svg/learn.svg' %}">
+    </div>
+</div>
+   <!-- <a href="{% url 'teach' %}" style="background-color: #2A7889; width: 10em;margin-top: 1em;" class="btn text-white ml-3 shadow">I WANT TO TEACH</a> -->
+<div class="row">
+    <div class="col-12 text-center">
+        <p style="font-family: Verdana, Geneva, Tahoma, sans-serif;" class="h4 mt-3">Explore <span style="color: #2A7889; font-family: cursive;">classrooms</span></p>
+    </div>
+    {% for classroom in classrooms %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="embed-responsive embed-responsive-16by9"> 
+                <video class="video-fluid"  id="video-player" width="100%" controls>
+                    <source src="{{ classroom.video.url }}" type="video/mp4">
+                </video>
+            </div>
+                
+            <div class="card-body">
+              <h5 class="card-title">{{ classroom.title }}</h5>
+              <div class="row">
+                  <div class="col-4">
+                    <p><span class="text-muted">instructor:</span>  <br><span style="margin-left: 1em;">{{ classroom.user }}</span></p>
+                  </div>
+                  <div class="col-4">
+                    <p><span class="text-muted">start-date:</span>  <br><span>{{ classroom.start_date }}</span></p>
+                  </div>
+                  <div class="col-4">
+                    <p><span class="text-muted">duration:</span>  <br><span>{{ classroom.duration }} Days</span></p>
+                  </div>
+
+              </div>
+              
+              <a href="{% url 'join-classroom' classroom.id %}" style="background-color: #2A7889; width: 100%;" class="btn btn-primary">JOIN CLASSROOM</a>
+            </div>
+          </div>
+    </div>
+    {% endfor %}
+</div>
+
 </div>
 {% endblock %}

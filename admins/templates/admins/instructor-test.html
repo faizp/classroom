@@ -18,7 +18,7 @@
   <div class="container-fluid">
       <div class="row">
       {% for category in categories %}
-      <div class="col-md-3">
+      <div class="col-md-3 mt-2">
           <a href="{% url 'category-test' category.id %}">
           <button style="width: 20em; height: 5em;" class="btn btn-primary rounded shadow-lg">{{ category }}</button>
         </a>

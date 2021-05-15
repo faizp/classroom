@@ -112,3 +112,30 @@ def profile(request):
         'profile': profile
     }
     return render(request, 'accounts/user-profile.html', context)
+
+
+def edit_profile(request):
+    profile = Profile.objects.get(user=request.user)
+    user = User.objects.get(id=request.user.id)
+    if request.method == 'POST':
+        print(profile.user.first_name)
+        user.first_name = request.POST['first-name']
+        user.last_name = request.POST['last-name']
+        country = request.POST['country']
+        number = request.POST['phone']
+        profile.status = request.POST['status']
+        profile.company = request.POST['company']
+        profile.bio = request.POST['bio']
+        profile.image = request.FILES.get('image')
+        phone_entered = country + number
+        if Profile.objects.filter(phone=phone_entered).exists():
+            return JsonResponse('false', safe=False)
+        profile.phone = phone_entered
+        profile.save()
+        user.save()
+        return JsonResponse('true', safe=False)
+
+    context = {
+        'profile': profile
+    }
+    return render(request, 'accounts/edit-profile.html', context)
