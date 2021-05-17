@@ -1,35 +1,34 @@
 {% extends 'classrooms/base.html' %}
+{% load static %}
 {% block content %}
 <div class="row p-3">
     <div class="col-12">
-        <div style="background-color: rgb(255, 255, 255); height: 80vh; width: 100%;" class="card shadow">
+        <div style="background-color: rgb(255, 255, 255);" class="card shadow p-5">
         <section>
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                
-            <h3 class="text-center" style="margin-top: 4em;">Choose what you want to Teach:</h3>
-            <div class="row">
-                <div class="col-4">
-                  <select style="width: 15em; margin-left: 7em; margin-top: 2em;" id="category" onchange="showCategories()" class="form-control">
-                      <option>Choose Category</option>
-                      {% for category in categories %}
-                      <option value="{{ category.id }}">{{ category }}</option>
-                      {% endfor %}
-                    </select>
+            <div class="container">
+            <div class="row mb-5">   
+                    <div class="col-md-6">
+                        <h3 class="text-center" style="margin-top: 4em;">Choose what you want to Teach:</h3>
+                                <select style="margin-top: 2em;" id="category" onchange="showCategories()" class="form-control">
+                                    <option>Choose Category</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select style="display: none;" id="sub-category" onchange="secCategoryChange()" class="form-control mt-2" required>
+                                </select>
+                                <div class="text-center mt-5">
+                            <small style="margin-top: 5em;" class="text-muted">**You Need to pass test to teach</small>
+                        </div>
+                            <button onclick="takeTest()" style="width: 100%;" class="btn btn-primary">TAKE TEST</button>
+                        <div id="take-test">
+                            
+                        </div>
+                </div>  
+                    <div class="col-md-6">
+                        <img style="margin-top: 4em;" class="img-fluid" src="{% static 'svg/quiz.svg' %}">
+                    </div>
                 </div>
-                </div>
-                <br>
-                <div class="row">
-                <div class="col-4">
-                  <select style="display: none; width: 15em; margin-left: 7em;" id="sub-category" class="form-control" required>
-                    </select>
-                </div>
-                <small style="margin-top: 5em;" class="text-muted text-center">You Need to pass test to teach</small>
-                <button onclick="takeTest()" class="btn btn-primary">TAKE TEST</button>
-                <a id="create-classroom" href="{% url 'create-classroom' %}" style="display: none;" class="btn btn-success mt-1">CREATE CLASSROOM</a>
-            </div>
-                <div class="col-md-4"></div>
             </div>
         </section>
         </div>
@@ -39,6 +38,7 @@
 {% block script %}
 <script>
     function showCategories(){
+        $('#take-test').html('');
         category = $('#category').val()
         $.ajax({
             url: '/admin/choose-category/',
@@ -61,7 +61,13 @@
     }
 </script>
 <script>
+    function secCategoryChange() {
+        $('#take-test').html('');
+    }
+</script>
+<script>
     function takeTest(){
+        $('#take-test').html('');
         var category = $('#sub-category').val()
         var data = {
             'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -87,7 +93,7 @@
                             title: "You have Already passed Test for this category",
                             icon: "success"
                         })
-                        $('#create-classroom').show()
+                        $('#take-test').append('<a id="create-classroom" href="{% url "create-classroom" %}" style="width: 100%;" class="btn btn-success mt-1">CREATE CLASSROOM</a>')
                     }
                     if (data == 'false'){
                         swal({

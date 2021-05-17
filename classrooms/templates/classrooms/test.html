@@ -1,39 +1,38 @@
 {% extends 'classrooms/base.html' %}
+{% load static %}
 {% block content %}
 <div class="container p-5">
-<div class="card">
-    <div class="row p-5">
-        <div class="col-12">
+    <div class="card shadow-lg">
+        <div class="row p-5">
             <h3 class="text-center">Questions: </h3>
-            <form>
-            {% for question in questions %}
-            Q:{{ forloop.counter}}
-            <input value="{{question.id}}" id="qst" type="text" style="display: none;">
-            <h6>{{question.question}}</h6>
-            {% for answer in answers %}
-            {% if questions.question.id == answer.question.id %}
-            {% for answer in answer %}
-            <div class="form-check">
-                <input class="form-check-input" type="radio" onselect="submitAnswer()" name="flexRadioDefault" id="answer" value="{{ answer.id }}">
-                <label class="form-check-label" for="flexRadioDefault1">
-                  {{answer.answer}}
-                </label>
-              </div>
-            {% endfor %}
-            {% endif %}
-            {% endfor %}
-            <button class="btn btn-success" onclick="submitAnswer('{{question.id}}')" type="button">SUBMIT ANSWER</button>
-            {% endfor %}
-        </form>
+            <div class="col-md-6">
+                <form method="POST" class="ml-4">{% csrf_token %}
+                    {% for question in questions %}
+                        Q:{{ forloop.counter }} 
+                        <h6>{{ question.question }}</h6>
+                        {% for answer in answers %}
+                            {% for ans in answer %}
+                                {% if question.id == ans.question.id %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="{{ question.id }}" id="answer" value="{{ ans.id }}" required>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                            {{ ans.answer }}
+                                            </label>
+                                        </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        <br>
+                    {% endfor %}
+                    <button style="width: 90%;" class="btn btn-success" type="submit">SUBMIT ANSWERS</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <img class="img-fluid" src="{% static 'svg/question.svg' %}" alt="">
+            </div>
         </div>
     </div>
 </div>
-</div>
 {% endblock %}
 {% block script %}
-<script>
-    function submitAnswer(id){
-        
-    }
-</script>
 {% endblock %}

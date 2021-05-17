@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Category, secCategory, Questions, Answer, TestPassed, Classroom, Day
+from random import sample
+from django.core import serializers
+import json
+
 
 # Create your views here.
 def index(request):
@@ -32,10 +36,18 @@ def teach(request):
 
 @login_required
 def test(request):
-    if request.session.has_key('secCategory'):
+    if request.method == 'GET':
         category = request.session['secCategory']
         sec_category = secCategory.objects.get(id=category)
-        questions = Questions.objects.filter(sec_category = sec_category)   
+        items = Questions.objects.filter(sec_category = sec_category) 
+        if len(items) >= 5:
+            a = 5
+        else:
+            a = len(items)
+        questions = sample(list(items), a)
+        request.session['questions'] = serializers.serialize('json', questions)
+        print(questions)
+        
         answers = []
         for question in questions:
             answer = Answer.objects.filter(question=question)
@@ -44,7 +56,23 @@ def test(request):
             'questions': questions,
             'answers': answers
         }
-    return render(request, 'classrooms/test.html', context)
+        return render(request, 'classrooms/test.html', context)
+    if request.method == 'POST':
+        q = request.session['questions']
+        questions = json.loads(q)
+        print(questions)
+        passed = True
+        for i in range(len(questions)):
+            a = questions[i]
+            answer = Answer.objects.get(question=str(a['pk']), correct='true')
+            b = request.POST.get(str(a['pk']))
+            if b != str(answer.id):
+                passed = False
+        print(passed)
+        if passed:
+            return redirect('test-passed')
+        return redirect('test-failed')
+    
 
 
 @login_required
@@ -111,3 +139,11 @@ def classroom_student(request, id):
         'classroom': classroom
     }
     return render(request, 'classrooms/classroom-student.html', context)
+
+
+def test_passed(request):
+    return render(request, 'classrooms/test-passed.html')
+
+
+def test_failed(request):
+    return render(request, 'classrooms/test-failed.html')

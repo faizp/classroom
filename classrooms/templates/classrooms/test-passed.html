@@ -1,0 +1,22 @@
+{% extends 'classrooms/base.html' %}
+{% load static %}
+{% block content %}
+<div class="row p-3">
+    <div class="col-12">
+        <div style="background-color: rgb(255, 255, 255);" class="card shadow p-5">
+        <section>
+           <div class="container">
+               <div class="row text-center">
+                   <div class="col-12">
+                       <h1 style="font-family: cursive;">Congratulations!</h1>
+                       <img style="width: 35em;" class="img-fluid" src="{% static 'svg/success.svg' %}" alt="">
+                       <h5>You have passed the test</h5>
+                       <a id="create-classroom" href="{% url 'create-classroom' %}" style="width: 100%; background-color: #2A7889;" class="btn text-white mt-1">CREATE CLASSROOM</a>
+                   </div>
+               </div>
+           </div>
+        </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
