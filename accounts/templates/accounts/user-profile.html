@@ -9,7 +9,7 @@
           <span class="text-muted"></span>
           <span class="badge badge-secondary badge-pill">3</span>
         </h4> -->
-        <button style="width: 83%; background-color: #2A7889;" class="btn text-white">Edit profile</button>
+        <a href="{% url 'edit-profile' %}" style="width: 83%; background-color: #2A7889;" class="btn text-white">Edit profile</a>
         <img class="border-dark p-1 shadow img-fluid" style="width: 20em; height: 20em" id="img1" src='{{ profile.image_url }}' alt="">
       </div>
       <div class="col-md-8 order-md-1">

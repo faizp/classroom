@@ -35,7 +35,7 @@
 <script>
     function showQuestions(id){
         $.ajax({
-            url: '/admin/questions/'+id,
+            url: '/test/questions/'+id,
             method: 'GET',
             success: function(data){
                 $('#question-section').html('')
@@ -52,16 +52,18 @@
 <script>
     function showAnswers(id){
         $.ajax({
-            url: '/admin/answers/'+id,
+            url: '/test/answers/'+id,
             method: 'GET',
             success: function(data){
                 console.log(data)
-                $('#answer-section').html('')
+                $('#answer-list'+id).html('')
                 data1 = JSON.parse(data.answers)
+                console.log(data1)
                 for (var i=0; i<data1.length; i++){
-                    $('#answer-list'+data1[i].fields.question).append('<li class="list-group-item">'+data1[i].fields.answer+'</li><br>')
+                    console.log(data1[i].fields.answer)
+                    $('#answer-list'+id).append('<li class="list-group-item">'+ data1[i].fields.answer +'</li>')
                 }
-                $('#answer-list').html('')
+                
                 data2 = JSON.parse(data.correctAnswer)
                 // $('#answer-list'+data1[i].fields.question).append('<p class="card-text">Answer:'+data2[0].fields.answer+'</p>')
             }

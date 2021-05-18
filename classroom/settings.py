@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'classrooms.apps.ClassroomsConfig',
     'admins.apps.AdminsConfig',
+    'instructor_test.apps.InstructorTestConfig',
     'crispy_forms',
 
     'django.contrib.sites',
