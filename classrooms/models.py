@@ -26,6 +26,7 @@ class Classroom(models.Model):
     duration = models.IntegerField()
     description = models.CharField(max_length=512)
     video = models.FileField(upload_to='preview_videos')
+    started = models.BooleanField(default=False)
 
 
 class Day(models.Model):

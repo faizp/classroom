@@ -1,49 +1,83 @@
 {% extends 'classrooms/base.html' %}
+{% load static %}
 {% block content %}
 <div class="container">
 <div class="row">
-    <div class="col-md-8 mt-4">
+    <div class="col-md-4 order-md-2 mt-5">
+        <div class="embed-responsive embed-responsive-16by9"> 
+            <video class="video-fluid"  id="video-player" width="90%" controls>
+                <source src="{{ classroom.video.url }}" type="video/mp4">
+            </video>
+        </div>
+        {% if classroom.classroom_status == 'enrolled' %}
+        {% if classroom.started %}
+        <a href="#" style="background-color: #2A7889; width: 90%;" class="btn text-white">GO TO CLASSROOM</a>
+        {% else %}
+        <a href="#" style="background-color: #2A7889; width: 90%;" class="btn text-white">CLASSROOM WILL BE AVAILABLE SOON</a>
+        {% endif %}
+        {% else %}
+        <a href="{% url 'enroll-classroom' classroom.id %}" style="background-color: #2A7889; width: 90%;" class="btn text-white">JOIN CLASSROOM</a>
+        {% endif %}
+    </div>  
+    <div class="col-md-8 order-md-1 mt-4">
         <div class="container-fluid">
         <h4 style="color: #2A7889;">{{ classroom.title }}</h4>
-         <p>{{ classroom.description }}</p>
-         <div style="width: 100%;" class="card p-3 shadow rounded-pill">
-            <div class="row">
-                <div class="col-md-4">
-                    <!-- <div style="display: flex;"> -->
-                        <div class="row">
-                            <small style="margin-left: 3em;" class="text-muted">Instructor:</small>
-                            <div class="col-7">
-                    <img style="width: 10em; height: 10em;" class="img-fluid rounded-circle" src="{{ classroom.user.profile.image.url }}" alt="">
-                </div>
-                <div class="col-5">
-                    <p><h5 class="mt-5">{{ classroom.user }}</h5>
-                    <h6 class="text-muted">"{{ classroom.user.profile.status }}"</h6>
-                </p>
-                </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p>{{ classroom.description }}</p>
             </div>
-                </div>
-                <div class="col-md-4">
-
-                </div>
-                <div class="col-md-4"></div>
+            <div class="col-md-6">
+                <img style="width: 100%; float: right;" src="{% static 'svg/teacher.svg' %}" alt="">
             </div>
-
-         </div>
+        </div>
         </div>
     </div>
-     <div class="col-md-4 mt-5">
-        <div class="embed-responsive embed-responsive-16by9"> 
-        <video class="video-fluid"  id="video-player" width="90%" controls>
-            <source src="{{ classroom.video.url }}" type="video/mp4">
-        </video>
-        </div>
-        <a style="background-color: #2A7889; width: 90%;" class="btn text-white">JOIN CLASSROOM</a>
-         
-       <!-- <button style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</button><br>
-        <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</button><br>
-        <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
-        <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</button>
-        </div> -->
+    
+    </div>
 </div>
+<div class="container">
+    <div class="row mt-3">
+        <div class="col-3 text-center">
+            <img style="width: 6em; height: 6em;" class="img-fluid rounded-circle" src="{{ classroom.user.profile.image_url }}" alt=""><br>
+            <i style="font-size: 1em;" class="fa fa-graduation-cap mt-2"></i>
+            <p style="font-family: cursive;" class="text-muted">instructor:<br><small style="font-family: 'Courier New', Courier, monospace;">{{ classroom.user.username }}</small></p> 
+            </div>
+        <div class="col-3 text-center">
+            <div class="mt-4">
+                <small style="font-family: cursive;" class="text-muted">Start date: </small> <br>
+            <i class="fa fa-calendar"></i>
+            <small >{{ classroom.start_date }}</small>
+            </div>
+            <div class="mt-4">
+                <small style="font-family: cursive;" class="text-muted">duration: </small> <br>
+            <i class="fa fa-history"></i>
+            <small>{{ classroom.duration }} Days</small>
+            </div>
+        </div>
+        <div class="col-3 text-center">
+            <div class="mt-4">
+                <small style="font-family: cursive;" class="text-muted">Total Seats: </small> <br>
+            <i class="fa fa-users"></i>
+            <small >{{ classroom.students }}</small>
+            </div>
+            <div class="mt-4">
+                <small style="font-family: cursive;" class="text-muted">Seats Left: </small> <br>
+            <i class="fa fa-user-times"></i>
+            <small>{{ classroom.seats_left }}</small>
+            </div>
+        </div>
+        <div class="col-3 text-center">
+            <div class="mt-4">
+                <small style="font-family: cursive;" class="text-muted">Language: </small> <br>
+            <i class="fa fa-language"></i>
+            <small >{{ classroom.language }}</small>
+            </div>
+            <!-- <div class="mt-4">
+                <small style="font-family: cursive;" class="text-muted">Seats Left: </small> <br>
+            <i class="fa fa-user-times"></i>
+            <small>{{ classroom.seats_left }}</small>
+            </div> -->
+        </div>
+    </div>
 </div>
 {% endblock %}

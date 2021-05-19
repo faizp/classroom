@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Category, secCategory, Classroom, Day
+from .models import Category, secCategory, Classroom, Day, ClassroomEnrolled
 
 
 def index(request):
@@ -72,9 +72,30 @@ def join_classroom(request, id):
 
 def classroom_student(request, id):
     classroom = Classroom.objects.get(id=id)
+    if ClassroomEnrolled.objects.filter(user=request.user, classroom=classroom).exists():
+        classroom.classroom_status = 'enrolled'
+    else:
+        classroom.classroom_status = 'enroll'
+    classroom_enrolled = ClassroomEnrolled.objects.filter(classroom=classroom).count()
+    classroom.seats_left = classroom.students - classroom_enrolled
     context = {
         'classroom': classroom
     }
     return render(request, 'classrooms/classroom-student.html', context)
 
 
+def my_classroom(request):
+    classrooms_teaching = Classroom.objects.filter(user=request.user)
+    classrooms_enrolled = ClassroomEnrolled.objects.filter(user=request.user)
+    context = {
+        'classrooms_teaching': classrooms_teaching,
+        'classrooms_enrolled': classrooms_enrolled
+    }
+    return render(request, 'classrooms/myclassroom.html', context)
+
+
+def enroll_classroom(request, id):
+    user = request.user
+    classroom = Classroom.objects.get(id=id)
+    ClassroomEnrolled.objects.create(user=user, classroom=classroom)
+    return redirect('classroom-student', id)

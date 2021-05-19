@@ -22,7 +22,7 @@
               <div class="d-flex">
                 {% if request.user.is_authenticated %}
                 <a href="{% url 'profile' %}" class="btn text-uppercase" style="color: rgb(0, 0, 0);">{{ user.username }}</a>
-                <a href="#" class="btn text-white text-center rounded" style="width: 10em; background-color: #2A7889;">MY CLASSROOM</a>
+                <a href="{% url 'my-classroom' %}" class="btn text-white text-center rounded" style="width: 10em; background-color: #2A7889;">MY CLASSROOM</a>
                 <a style="color: rgb(0, 0, 0); margin-left: 0.5em;" href="{% url 'logout' %}"><i style="font-size: 2em; margin-top: 4px;" class="fa fa-angle-double-right"></i></a>
                 {% else %}
                 <a href="{% url 'login' %}" class="btn" style="color: rgb(0, 0, 0);">SIGN IN</a>

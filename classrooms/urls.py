@@ -9,4 +9,7 @@ urlpatterns = [
     path('add-new-day/<int:id>', views.add_day, name='add-new-day'),
     path('join-classroom/<int:id>', views.join_classroom, name='join-classroom'),
     path('classroom-student/<int:id>', views.classroom_student, name='classroom-student'),
+    path('my-classroom/', views.my_classroom, name='my-classroom'),
+    path('enroll-classroom/<int:id>', views.enroll_classroom, name='enroll-classroom'),
+    
 ]
