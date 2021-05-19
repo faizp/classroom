@@ -1,0 +1,35 @@
+{% extends 'classrooms/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mt-2">
+            <h4>{{ classroom.title }}</h4>
+            <div style="justify-content: space-between; display: flex;">
+            <h5 class="text-muted">Manage Students:</h5>
+           
+        </div>
+        {% for student in students %}
+        <div class="card p-2 shadow rounded-pill mt-2">
+            <div class="row ">
+                <div class="col-md-2">
+                    <img class="img-fluid rounded-circle" style="width: 50%; height: auto;" src="{{ student.user.profile.image_url }}" alt="">
+                </div>
+                <div class="col-md-7">
+                    <h5 class="mt-1">{{ student.user.username }}</h5>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'remove-student' classroom.id student.user.id %}" style="width: 95%; height: 90%;" class="btn btn-danger rounded-pill mt-1">REMOVE</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+        <div class="col-md-4 text-center mt-5">
+            <button style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</button><br>
+            <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</button><br>
+            <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</button><br>
+            <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</button>
+            </div>
+    </div>
+    </div>
+{% endblock %}

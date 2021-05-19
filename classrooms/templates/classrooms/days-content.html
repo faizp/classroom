@@ -1,0 +1,28 @@
+{% extends 'classrooms/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if content == None %}
+        <div class="col-md-12 mt-3 text-center">
+            <img style="width: 50%;" class="img-fluid" src="{% static 'svg/no-content.svg' %}" alt="">
+            <h6 class="mt-4">No contents Available</h6>
+        </div>
+        
+        {% else %}
+        <div class="col-md-8 mt-2">
+            <h5 style="font-family: cursive; color: #2A7889;">Latest Course Content:</h5>
+            <div class="embed-responsive embed-responsive-16by9"> 
+                <video class="video-fluid"  id="video-player" width="100%" controls>
+                    <source src="{{ content.video.url }}" type="video/mp4">
+                </video>
+            </div>
+            <h4>{{ content.video_title }}</h4>   
+        </div>
+        <div class="col-md-4 text-center mt-5">
+            <p>{{ content.description }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

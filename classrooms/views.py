@@ -2,10 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Category, secCategory, Classroom, Day, ClassroomEnrolled
+from django.contrib.auth.models import User
 
 
 def index(request):
-    classrooms = Classroom.objects.all()
+    if request.user.is_authenticated:
+        classrooms = Classroom.objects.filter(started=False).exclude(user=request.user)
+    else:
+        classroom = Classroom.objects.all()
     context = {
         'classrooms': classrooms
     }
@@ -99,3 +103,31 @@ def enroll_classroom(request, id):
     classroom = Classroom.objects.get(id=id)
     ClassroomEnrolled.objects.create(user=user, classroom=classroom)
     return redirect('classroom-student', id)
+
+
+def content(request, id):
+    classroom = Classroom.objects.get(id=id)
+    content = Day.objects.filter(classroom = classroom, publish=True).last()
+    print(content)
+    context = {
+        'content': content
+    }
+    return render(request, 'classrooms/days-content.html', context)
+
+
+def manage_students(request, id):
+    classroom = Classroom.objects.get(id=id)
+    students = ClassroomEnrolled.objects.filter(classroom=classroom)
+    context = {
+        'students': students,
+        'classroom': classroom
+    }
+    return render(request, 'classrooms/manage-students.html', context)
+
+
+def remove_student(request, c_id, u_id):
+    classroom = Classroom.objects.get(id=c_id)
+    user = User.objects.get(id=u_id)
+    student = ClassroomEnrolled.objects.get(classroom=classroom, user=user)
+    student.delete()
+    return redirect('manage-students', c_id)
