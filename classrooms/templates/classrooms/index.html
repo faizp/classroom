@@ -19,7 +19,7 @@
     </div>
     {% for classroom in classrooms %}
     <div class="col-md-4">
-        <div class="card">
+        <div class="card shadow rounded">
             <div class="embed-responsive embed-responsive-16by9"> 
                 <video class="video-fluid"  id="video-player" width="100%" controls>
                     <source src="{{ classroom.video.url }}" type="video/mp4">
@@ -40,8 +40,11 @@
                   </div>
 
               </div>
-              
-              <a href="{% url 'join-classroom' classroom.id %}" style="background-color: #2A7889; width: 100%;" class="btn btn-primary">JOIN CLASSROOM</a>
+              {% if classroom.full %}
+              <a style="background-color: #b9223c; width: 100%;" class="btn text-white rounded-pill">CLASSROOM IS FULL</a>
+              {% else %}
+              <a href="{% url 'join-classroom' classroom.id %}" style="background-color: #2A7889; width: 100%;" class="btn text-white rounded-pill">JOIN CLASSROOM</a>
+              {% endif %} 
             </div>
           </div>
     </div>

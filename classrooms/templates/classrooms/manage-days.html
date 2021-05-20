@@ -18,17 +18,21 @@
                     {{ day.video_title }}
                 </div>
                 <div class="col-md-4">
-                    <button class="btn btn-danger">PUBLISH</button>
+                    {% if day.publish %}
+                    <button class="btn btn-success">PUBLISHED</button>
+                    {% else %}
+                    <a href="{% url 'publish-content' day.id %}" class="btn btn-danger">PUBLISH</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
         {% endfor %}
         </div>
         <div class="col-md-4 text-center mt-5">
-            <button style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</button><br>
-            <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</button><br>
-            <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</button><br>
-            <button style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</button>
+            <a href="{% url 'manage-students' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</a><br>
+        <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
+        <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
+        <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</a>
             </div>
     </div>
     </div>

@@ -24,7 +24,7 @@ class Classroom(models.Model):
     language = models.CharField(max_length = 64)
     start_date = models.DateField()
     duration = models.IntegerField()
-    description = models.CharField(max_length=512)
+    description = models.CharField(max_length=2048)
     video = models.FileField(upload_to='preview_videos')
     started = models.BooleanField(default=False)
 
@@ -33,7 +33,7 @@ class Day(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     video = models.FileField(upload_to='course_content')
     video_title = models.CharField(max_length=64)
-    description = models.CharField(max_length=512)
+    description = models.CharField(max_length=2048)
     publish = models.BooleanField(default=False)
     
 

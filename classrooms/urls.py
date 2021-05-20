@@ -14,4 +14,5 @@ urlpatterns = [
     path('content/<int:id>', views.content, name='content'),
     path('manage-students/<int:id>', views.manage_students, name='manage-students'),
     path('remove-student/<int:c_id>/<int:u_id>', views.remove_student, name='remove-student'),
+    path('publish-content/<int:id>', views.publish_day, name='publish-content')
 ]

@@ -9,7 +9,14 @@ def index(request):
     if request.user.is_authenticated:
         classrooms = Classroom.objects.filter(started=False).exclude(user=request.user)
     else:
-        classroom = Classroom.objects.all()
+        classrooms = Classroom.objects.all()
+    for classroom in classrooms:
+        students = ClassroomEnrolled.objects.filter(classroom = classroom).count()
+        print(students, classroom.students)
+        if classroom.students <= students:
+            classroom.full = True
+        else:
+            classroom.full = False
     context = {
         'classrooms': classrooms
     }
@@ -62,6 +69,8 @@ def add_day(request, id):
         description = request.POST.get('description')
         classroom = Classroom.objects.get(pk=id)
         Day.objects.create(classroom=classroom, video=video, video_title=title, description=description)
+        classroom.started = True
+        classroom.save()
         return redirect('manage-days',id)
     return render(request, 'classrooms/add-day.html')
 
@@ -131,3 +140,10 @@ def remove_student(request, c_id, u_id):
     student = ClassroomEnrolled.objects.get(classroom=classroom, user=user)
     student.delete()
     return redirect('manage-students', c_id)
+
+
+def publish_day(request, id):
+    day = Day.objects.get(id=id)
+    day.publish = True
+    day.save()
+    return redirect('manage-days', day.classroom.id)
