@@ -29,53 +29,57 @@ def teach(request):
 
 @login_required
 def test(request):
-    if request.method == 'GET':
-        print(Answer.objects.filter(question=3, correct='true'))
-        category = request.session['secCategory']
-        sec_category = secCategory.objects.get(id=category)
-        items = Questions.objects.filter(sec_category = sec_category) 
-        if len(items) >= 5:
-            a = 5
-        else:
-            a = len(items)
-        questions = sample(list(items), a)
-        request.session['questions'] = serializers.serialize('json', questions)
+    if request.session.has_key('secCategory'):
+        if request.method == 'GET':
+            print(Answer.objects.filter(question=3, correct='true'))
+            category = request.session['secCategory']
+            sec_category = secCategory.objects.get(id=category)
+            items = Questions.objects.filter(sec_category = sec_category) 
+            if len(items) >= 5:
+                a = 5
+            else:
+                a = len(items)
+            questions = sample(list(items), a)
+            request.session['questions'] = serializers.serialize('json', questions)
 
-        answers = []
-        for question in questions:
-            answer = Answer.objects.filter(question=question)
-            answers.append(answer)
-        context = {
-            'questions': questions,
-            'answers': answers
-        }
-        return render(request, 'instructor-test/test.html', context)
+            answers = []
+            for question in questions:
+                answer = Answer.objects.filter(question=question)
+                answers.append(answer)
+            context = {
+                'questions': questions,
+                'answers': answers
+            }
+            return render(request, 'instructor-test/test.html', context)
 
-    if request.method == 'POST':
-        q = request.session['questions']
-        questions = json.loads(q)
-        # print(questions)
-        passed = True
-        for i in range(len(questions)):
-            a = questions[i]['pk']
-            answer = Answer.objects.get(question=a, correct='true')
-            b = request.POST.get(str(a))
-            if b != str(answer.id):
-                passed = False
-        category_id = questions[0]['fields']['sec_category']
-        print(category_id)
-        sec_category = secCategory.objects.get(id=category_id)
-        if passed:
-            TestPassed.objects.create(user = request.user, sec_category=sec_category)
-            return redirect('test-passed')
-        return redirect('test-failed')
+        if request.method == 'POST':
+            q = request.session['questions']
+            questions = json.loads(q)
+            # print(questions)
+            passed = True
+            for i in range(len(questions)):
+                a = questions[i]['pk']
+                answer = Answer.objects.get(question=a, correct='true')
+                b = request.POST.get(str(a))
+                if b != str(answer.id):
+                    passed = False
+            category_id = questions[0]['fields']['sec_category']
+            print(category_id)
+            sec_category = secCategory.objects.get(id=category_id)
+            if passed:
+                TestPassed.objects.create(user = request.user, sec_category=sec_category)
+                return redirect('test-passed')
+            return redirect('test-failed')
+    return redirect('teach')
 
 
 def test_passed(request):
+    del request.session['secCategory']
     return render(request, 'instructor-test/test-passed.html')
 
 
 def test_failed(request):
+    del request.session['secCategory']
     return render(request, 'instructor-test/test-failed.html')
 
 
