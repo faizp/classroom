@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container p-3">
     <div class="card p-5 shadow-lg ">
-        <a href="{% url 'teach' %}" style="width: 12em; float: right;" class="btn btn-primary">CREATE CLASSROOM</a>
-        <div class="row">
+        <a href="{% url 'teach' %}" style="width: 12em; float: right;" class="btn btn shadow">CREATE CLASSROOM</a>
+        <div class="row mt-4">
         <div class="col-lg-6 order-md-2">
             <h5 style="color: #2A7889; font-family: cursive;">Courses Taught:</h5>
             {% for classroom in classrooms_teaching %}
@@ -18,10 +18,16 @@
                         </div>
                     </div>
                     <div class="col-5"><h6>{{ classroom.title }}</h6>
-                        <h6>status: </h6>
+                        <h6>status: 
+                            {% if classroom.started %}
+                            Day: {{ classroom.status }} 
+                            {% else %}
+                            {{ classroom.status }}
+                            {% endif %}
+                        </h6>
                     </div>
                     <div class="col-md-4">
-                        <a href="{% url 'classroom-tutor' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em;" class="btn btn-primary">ENTER CLASSROOM</a>
+                        <a href="{% url 'classroom-tutor' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em; background-color: #2A7889;" class="btn text-white rounded-pill">ENTER CLASSROOM</a>
                     </div>
                 </div>
             </div>
@@ -40,10 +46,16 @@
                         </div>
                     </div>
                     <div class="col-5"><h6>{{ classroom.classroom.title }}</h6>
-                        <h6>status: </h6>
+                        <h6>status: 
+                            {% if classroom.classroom.started %}
+                            Day: {{ classroom.classroom.status }} 
+                            {% else %}
+                            {{ classroom.classroom.status }}
+                            {% endif %}
+                        </h6>
                     </div>
                     <div class="col-md-4">
-                        <a href="{% url 'classroom-student' classroom.classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em;" class="btn btn-primary">ENTER CLASSROOM</a>
+                        <a href="{% url 'classroom-student' classroom.classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em; background-color: #2A7889;" class="btn rounded-pill text-white">ENTER CLASSROOM</a>
                     </div>
                 </div>
             </div>

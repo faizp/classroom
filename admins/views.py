@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from classrooms.forms import CategoryForm
-from classrooms.models import Category, secCategory
+from classrooms.models import Category, secCategory, Classroom, Day
 from django.core import serializers
 
 
@@ -39,6 +39,16 @@ def add_category(request):
     return render(request, 'admins/category.html', context)
 
 
+def add_sec_category(request):
+    if request.method == 'POST':
+        category_chosed = request.POST.get('chosed-category')
+        sec_category = request.POST.get('sec-category')
+        category = Category.objects.get(id=category_chosed)
+        secCategory.objects.create(category=category, name=sec_category)
+        return redirect('add-category')
+    return redirect('add-category')
+
+
 def sec_category(request):
     if request.method == 'POST':
         category = request.POST['category']
@@ -52,9 +62,6 @@ def sec_category(request):
     return JsonResponse('false', safe=False)
 
 
-
-
-
 def choose_category(request):
     if request.method == 'POST':
         category = request.POST['category']
@@ -64,4 +71,43 @@ def choose_category(request):
         }
         return JsonResponse(data)
     return JsonResponse('false', safe=False)
+
+
+def manage_classroom(request):
+    categories = Category.objects.all()
+    classrooms = Classroom.objects.all()
+    for classroom in classrooms:
+        if classroom.started:
+            day_count = Day.objects.filter(classroom = classroom, publish = True).count()
+            classroom.status = day_count
+        else:
+            classroom.status = 'Not Started'
+    print(categories)
+    context = {
+        'classrooms': classrooms,
+        'categories': categories
+    }
+    return render(request, 'admins/manage-classrooms.html', context)
         
+
+def select_category(request):
+    categories = Category.objects.all()
+    context = {
+        'categories': categories
+    }
+    return render(request, 'admins/select-category.html', context)
+
+
+def show_classrooms(request, id):
+    sec_category = secCategory.objects.get(id=id)
+    classrooms = Classroom.objects.filter(sec_category=sec_category)
+    data = {
+        'classrooms' : serializers.serialize('json', classrooms)
+    }
+    return JsonResponse(data)
+
+
+def delete_classroom(request, id):
+    classroom = Classroom.objects.get(id=id)
+    classroom.delete()
+    return redirect('manage-classrooms')

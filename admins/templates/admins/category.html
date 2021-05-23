@@ -24,7 +24,7 @@
                     <div class="white-box">
                         <div style="display: flex; justify-content: space-between;">
                         <h3 class="box-title">Categories</h3>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#category-modal">Add Categoies</button>
+                        <a href="#add-category-section" class="btn btn-primary">Add Categoies</a>
                         </div>
                         <!-- <p class="text-muted">Add class <code>.table</code></p> -->
                         <div class="table-responsive">
@@ -50,30 +50,22 @@
                             </table>
                         </div>
                     </div>
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form | crispy }}
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </form>
                 </div>
             </div>
-
-
         </div>
         <div class="col-md-6">
-            
-
             <div class="row">
                 <div class="col-sm-12">
                     <div class="white-box">
                         <div style="display: flex; justify-content: space-between;">
                             <h3 class="box-title">Sub Categories</h3>
-                            <select style="width: 6em;" onchange="showCategories()" name="category" class="form-control" id="category">
+                            <select style="width: 10em;" onchange="showCategories()" name="category" class="form-control" id="category">
+                                <option>Choose Category</option>
                                 {% for category in categories %}
                                 <option value="{{ category.id }}">{{ category }}</option>
                                 {% endfor %}
                             </select>
-                            <button class="btn btn-primary">Add Sub Categoies</button>
+                            <a href="#add-category-section" class="btn btn-primary">Add Sub Categoies</a>
                         </div>
                         <div class="table-responsive">
                             <table class="table text-nowrap">
@@ -99,46 +91,46 @@
                         </div>
                     </div>
                 </div>
+               
+            </div>
+        </div>
+    </div> 
+</div>
+<div class="container-fluid">
+    <section id="add-category-section">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Add Categories:</h3>
                 <form method="post">
                     {% csrf_token %}
-                    <div class="form-group">
+                    {{ form | crispy }}
+                    <button type="submit" style="width: 100%;" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h3>Add sub categories</h3>
+                <form method="post" action="{% url 'add-sec-category' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                    <div class="form-group col-6">
                         <label for="categories">Select Cateogory</label>
-                        <select class="form-control" name="category" id="categories">
+                        <select class="form-control" name="chosed-category" id="categories">
                         {% for category in categories %}
                         <option value="{{ category.id }}">{{ category }}</option>
                         {% endfor %}
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="sec-category">Enter Name:</label>
-                        <input type="text" maxlength="36" required/>
+                    <div class="form-group col-6">
+                        <label for="sec-category">Enter Name:</label><br>
+                        <input class="form-control" name="sec-category" type="text" maxlength="36" required/>
                     </div>
-                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+                    <button style="width: 100%;" type="submit" class="btn btn-success">Submit</button>
                 </form>
             </div>
         </div>
-    </div> 
+    </section>
 </div>
-  <!-- Modal -->
-  <div class="modal fade" id="category-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-           
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
 {% endblock %}
 {% block script %}

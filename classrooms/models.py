@@ -16,6 +16,11 @@ class secCategory(models.Model):
         return self.name
 
 
+class ClassroomManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
 class Classroom(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     sec_category = models.ForeignKey(secCategory, on_delete=models.CASCADE)
@@ -27,6 +32,10 @@ class Classroom(models.Model):
     description = models.CharField(max_length=2048)
     video = models.FileField(upload_to='preview_videos')
     started = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    active_classrooms = ClassroomManager()
 
 
 class Day(models.Model):

@@ -9,6 +9,7 @@ import os
 from twilio.rest import Client
 from classroom import secret
 import random, math
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -106,6 +107,7 @@ def profile_register(request):
     return render(request, 'registration/profile-register.html')
 
 
+@login_required(login_url='login')
 def profile(request):
     profile = Profile.objects.get(user=request.user)
     context = {
@@ -114,6 +116,7 @@ def profile(request):
     return render(request, 'accounts/user-profile.html', context)
 
 
+@login_required(login_url='login')
 def edit_profile(request):
     profile = Profile.objects.get(user=request.user)
     user = User.objects.get(id=request.user.id)

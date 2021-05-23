@@ -1,0 +1,29 @@
+{% extends 'admins/admin-base.html' %}
+{% block content %}
+<div class="page-breadcrumb bg-white">
+    <div class="row align-items-center">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            <h4 class="page-title">Select Category</h4>
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+            <div class="d-md-flex">
+                <ol class="breadcrumb ms-auto">
+                    <li><a href="#" class="fw-normal">Select Category</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+  </div>
+  <div class="container-fluid">
+      <div class="row">
+      {% for category in categories %}
+      <div class="col-md-3 mt-2">
+          <a href="{% url 'manage-classrooms' category.id %}">
+          <button style="width: 20em; height: 5em;" class="btn rounded shadow-lg">{{ category }}</button>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

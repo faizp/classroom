@@ -8,7 +8,7 @@ from classrooms.models import Category, secCategory
 from django.http import JsonResponse
 
 
-@login_required
+@login_required(login_url='login')
 def teach(request):
     if request.method == 'POST':
         category = request.POST['category']
@@ -27,7 +27,7 @@ def teach(request):
     return render(request, 'instructor-test/teach.html', context)
 
 
-@login_required
+@login_required(login_url='login')
 def test(request):
     if request.session.has_key('secCategory'):
         if request.method == 'GET':
@@ -73,11 +73,13 @@ def test(request):
     return redirect('teach')
 
 
+@login_required(login_url='login')
 def test_passed(request):
     del request.session['secCategory']
     return render(request, 'instructor-test/test-passed.html')
 
 
+@login_required(login_url='login')
 def test_failed(request):
     del request.session['secCategory']
     return render(request, 'instructor-test/test-failed.html')

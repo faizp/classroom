@@ -7,9 +7,9 @@ from django.contrib.auth.models import User
 
 def index(request):
     if request.user.is_authenticated:
-        classrooms = Classroom.objects.filter(started=False).exclude(user=request.user)
+        classrooms = Classroom.active_classrooms.filter(started=False).exclude(user=request.user)
     else:
-        classrooms = Classroom.objects.all()
+        classrooms = Classroom.active_classrooms.filter(started=False)
     for classroom in classrooms:
         students = ClassroomEnrolled.objects.filter(classroom = classroom).count()
         print(students, classroom.students)
@@ -23,7 +23,7 @@ def index(request):
     return render(request, 'classrooms/index.html', context)
 
 
-@login_required
+@login_required(login_url='login')
 def create_classroom(request):
     if request.method == 'POST':
         video = request.FILES.get('video')
@@ -41,18 +41,18 @@ def create_classroom(request):
     return render(request, 'classrooms/create-classroom.html')
 
 
-@login_required
+@login_required(login_url='login')
 def classroom_tutor(request, id):
-    classroom = Classroom.objects.get(id=id)
+    classroom = Classroom.active_classrooms.get(id=id)
     context = {
         'classroom': classroom
     }
     return render(request, 'classrooms/classroom-tutor.html', context)
 
 
-@login_required
+@login_required(login_url='login')
 def manage_days(request, id):
-    classroom = Classroom.objects.get(id=id)
+    classroom = Classroom.active_classrooms.get(id=id)
     days = Day.objects.filter(classroom=classroom)
     context = {
         'classroom': classroom,
@@ -61,7 +61,7 @@ def manage_days(request, id):
     return render(request, 'classrooms/manage-days.html', context)
 
 
-@login_required
+@login_required(login_url='login')
 def add_day(request, id):
     if request.method == 'POST':
         video = request.FILES.get('video')
@@ -75,16 +75,16 @@ def add_day(request, id):
     return render(request, 'classrooms/add-day.html')
 
 
-@login_required
+@login_required(login_url='login')
 def join_classroom(request, id):
-    if Classroom.objects.get(id=id).user == request.user:
+    if Classroom.active_classrooms.get(id=id).user == request.user:
         return redirect('classroom-tutor',id)
     else:
         return redirect('classroom-student',id)
 
 
 def classroom_student(request, id):
-    classroom = Classroom.objects.get(id=id)
+    classroom = Classroom.active_classrooms.get(id=id)
     if ClassroomEnrolled.objects.filter(user=request.user, classroom=classroom).exists():
         classroom.classroom_status = 'enrolled'
     else:
@@ -97,9 +97,24 @@ def classroom_student(request, id):
     return render(request, 'classrooms/classroom-student.html', context)
 
 
+@login_required(login_url='login')
 def my_classroom(request):
-    classrooms_teaching = Classroom.objects.filter(user=request.user)
+    classrooms_teaching = Classroom.active_classrooms.filter(user=request.user)
+    for classroom in classrooms_teaching:
+        if classroom.started:
+            day_count = Day.objects.filter(classroom = classroom, publish = True).count()
+            classroom.status = day_count
+        else:
+            classroom.status = 'Not Started'
     classrooms_enrolled = ClassroomEnrolled.objects.filter(user=request.user)
+    for classroom in classrooms_enrolled:
+        if classroom.classroom.started:
+            day_count = Day.objects.filter(classroom=classroom.classroom, publish=True).count()
+            classroom.classroom.status= day_count
+        else:
+            classroom.classroom.status = 'Not Started'
+    print(classrooms_enrolled)
+    
     context = {
         'classrooms_teaching': classrooms_teaching,
         'classrooms_enrolled': classrooms_enrolled
@@ -107,15 +122,17 @@ def my_classroom(request):
     return render(request, 'classrooms/myclassroom.html', context)
 
 
+@login_required(login_url='login')
 def enroll_classroom(request, id):
     user = request.user
-    classroom = Classroom.objects.get(id=id)
+    classroom = Classroom.active_classrooms.get(id=id)
     ClassroomEnrolled.objects.create(user=user, classroom=classroom)
     return redirect('classroom-student', id)
 
 
+@login_required(login_url='login')
 def content(request, id):
-    classroom = Classroom.objects.get(id=id)
+    classroom = Classroom.active_classrooms.get(id=id)
     content = Day.objects.filter(classroom = classroom, publish=True).last()
     print(content)
     context = {
@@ -124,8 +141,9 @@ def content(request, id):
     return render(request, 'classrooms/days-content.html', context)
 
 
+@login_required(login_url='login')
 def manage_students(request, id):
-    classroom = Classroom.objects.get(id=id)
+    classroom = Classroom.active_classrooms.get(id=id)
     students = ClassroomEnrolled.objects.filter(classroom=classroom)
     context = {
         'students': students,
@@ -134,14 +152,16 @@ def manage_students(request, id):
     return render(request, 'classrooms/manage-students.html', context)
 
 
+@login_required(login_url='login')
 def remove_student(request, c_id, u_id):
-    classroom = Classroom.objects.get(id=c_id)
+    classroom = Classroom.active_classrooms.get(id=c_id)
     user = User.objects.get(id=u_id)
     student = ClassroomEnrolled.objects.get(classroom=classroom, user=user)
     student.delete()
     return redirect('manage-students', c_id)
 
 
+@login_required(login_url='login')
 def publish_day(request, id):
     day = Day.objects.get(id=id)
     day.publish = True
