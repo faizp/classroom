@@ -16,26 +16,27 @@
     <!-- /.col-lg-12 -->
   </div>
   <div class="container-fluid">
-      <div class="row">
+    <form method="POST" action="">{% csrf_token %}
+        <div class="form-row">
+          <h6>See category wise classroom:</h6>
           <div class="col-md-6">
-            <div class="form-group">
-                <!-- <label for="exampleFormControlSelect1">Select Category:</label> -->
                 <select class="form-control" onchange="showCategories()" id="category">
-                  <option>Choose Category</option>
+                  <option>Choose Category:</option>
                   {% for category in categories %}
                   <option value="{{ category.id }}">{{ category }}</option>
                   {% endfor %}
                 </select>
-              </div>
           </div>
-          <div class="col-md-6">
-            <div class="form-group">
-                <select class="form-control" id="sub-category">
-                  <option>Choose Second Category</option>
+          <div class="col-md-6 mt-1">
+                <select class="form-control" name="sub-category" onchange="showClassrooms()" id="sub-category" required>
                 </select>
-              </div>
           </div>
-    </div>
+          <div class="col-md-6 mt-1">
+              <button type="submit" class="btn btn-success">SUBMIT</button>
+              <a class="btn btn-primary text-white" href="{% url 'manage-classrooms' %}">SHOW ALL CLASSROOMS</a>
+          </div>
+        </div>
+    </form>
     <div style="justify-content: space-between; display: flex; height: 2.5em;">
     <h3 class="mt-3">Classrooms</h3>
     </div>
@@ -82,7 +83,12 @@
                     </h5>
                 </div>
                 <div class="col-md-4">
-                    <a href="{% url 'delete-classroom' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em;" class="btn btn-danger text-white">DELETE CLASSROOM</a>
+                    <a href="{% url 'delete-classroom' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em;" class="btn btn-secondary text-white">DELETE CLASSROOM</a>
+                    {% if classroom.is_active %}
+                    <a href="{% url 'block-classroom' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em;" class="btn btn-danger text-white">BLOCK CLASSROOM</a>
+                    {% else %}
+                    <a href="{% url 'unblock-classroom' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em;" class="btn btn-success text-white">UNBLOCK CLASSROOM</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -91,8 +97,9 @@
   </div>
 {% endblock %}
 {% block script %}
-<script>
-    function showClassrooms(id){
+<!-- <script>
+    function showClassrooms(){
+        var id = $('#sub-category').val()
         $.ajax({
             url: '/admin/show-classrooms/'+id,
             method: 'GET',
@@ -108,7 +115,7 @@
         }
         })
     }
-</script>
+</script> -->
 <script>
     function showCategories(){
         category = $('#category').val()

@@ -10,7 +10,7 @@ urlpatterns = [
     path('choose-category/', views.choose_category, name='choose-category'),
     path('add-sec-category/', views.add_sec_category, name='add-sec-category'),
     path('manage-classrooms/', views.manage_classroom, name='manage-classrooms'),
-    path('select-category/', views.select_category, name='select-category'),
-    path('show-classrooms/<int:id>', views.show_classrooms, name='show-classrooms'),
-    path('delete-classroom/<int:id>', views.delete_classroom, name='delete-classroom')
+    path('delete-classroom/<int:id>', views.delete_classroom, name='delete-classroom'),
+    path('block-classroom/<int:id>', views.block_classroom, name='block-classroom'),
+    path('unblock-classroom/<int:id>', views.unblock_classroom, name='unblock-classroom')
 ]

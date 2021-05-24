@@ -74,6 +74,24 @@ def choose_category(request):
 
 
 def manage_classroom(request):
+    if request.method == 'POST':
+        categories = Category.objects.all()
+        id = request.POST.get('sub-category')
+        sec_category = secCategory.objects.get(id=id)
+        classrooms = Classroom.objects.filter(sec_category=sec_category)
+        for classroom in classrooms:
+            if classroom.started:
+                day_count = Day.objects.filter(classroom = classroom, publish = True).count()
+                classroom.status = day_count
+            else:
+                classroom.status = 'Not Started'
+                
+        context = {
+            'classrooms': classrooms,
+            'categories': categories
+        }
+        return render(request, 'admins/manage-classrooms.html', context)
+
     categories = Category.objects.all()
     classrooms = Classroom.objects.all()
     for classroom in classrooms:
@@ -82,7 +100,7 @@ def manage_classroom(request):
             classroom.status = day_count
         else:
             classroom.status = 'Not Started'
-    print(categories)
+
     context = {
         'classrooms': classrooms,
         'categories': categories
@@ -90,24 +108,21 @@ def manage_classroom(request):
     return render(request, 'admins/manage-classrooms.html', context)
         
 
-def select_category(request):
-    categories = Category.objects.all()
-    context = {
-        'categories': categories
-    }
-    return render(request, 'admins/select-category.html', context)
-
-
-def show_classrooms(request, id):
-    sec_category = secCategory.objects.get(id=id)
-    classrooms = Classroom.objects.filter(sec_category=sec_category)
-    data = {
-        'classrooms' : serializers.serialize('json', classrooms)
-    }
-    return JsonResponse(data)
-
-
 def delete_classroom(request, id):
     classroom = Classroom.objects.get(id=id)
     classroom.delete()
+    return redirect('manage-classrooms')
+
+
+def block_classroom(request, id):
+    classroom = Classroom.objects.get(id=id)
+    classroom.is_active = False
+    classroom.save()
+    return redirect('manage-classrooms')
+
+
+def unblock_classroom(request, id):
+    classroom = Classroom.objects.get(id=id)
+    classroom.is_active = True
+    classroom.save()
     return redirect('manage-classrooms')
