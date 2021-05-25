@@ -16,7 +16,7 @@
   </head>
   <body style="overflow-x: hidden;">
       <header>
-        <nav style="height: 7em;" class="navbar navbar-light shadow">
+        <!-- <nav style="height: 7em;" class="navbar navbar-light shadow">
             <div class="container">
               <a href="{% url 'index' %}" style="font-family: cursive; margin-left: 1em; font-size: 2em; opacity: 0.8; animation: mymove 5s infinite;" class="navbar-brand">CLASSROOM</a>
               <div class="d-flex">
@@ -24,13 +24,70 @@
                 <a href="{% url 'profile' %}" class="btn text-uppercase" style="color: rgb(0, 0, 0);">{{ user.username }}</a>
                 <a href="{% url 'my-classroom' %}" class="btn text-white text-center rounded" style="width: 10em; background-color: #2A7889;">MY CLASSROOM</a>
                 <a style="color: rgb(0, 0, 0); margin-left: 0.5em;" href="{% url 'logout' %}"><i style="font-size: 2em; margin-top: 4px;" class="fa fa-angle-double-right"></i></a>
+                <i style="font-size: 2em; margin-top: 4px;" class="fa fa-bell"></i>
                 {% else %}
                 <a href="{% url 'login' %}" class="btn" style="color: rgb(0, 0, 0);">SIGN IN</a>
                 <a href="{% url 'register' %}" class="btn text-white text-center rounded" style="width: 10em; background-color: #2A7889;">GET STARTED</a>
                 {% endif %}
               </div>
+                          
+            </div>
+          </nav> -->
+
+
+          <nav style="height: 7em;" class="navbar shadow navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+              <a class="navbar-brand" href="{% url 'index' %}" style="font-family: cursive; margin-left: 1em; font-size: 2em; opacity: 0.8; animation: mymove 5s infinite;">CLASSROOM</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul style="margin-left: auto;" class="navbar-nav mb-2 mb-lg-0">
+                  <!-- <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                  </li> -->
+                  <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                  </li> -->
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      ANNOUNCEMENTS
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-uppercase" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      {{ user.username}}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{% url 'profile' %}">My profile</a></li>
+                      <li><hr class="dropdown-divider"></li>  
+                      <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link btn text-white " style="width: 12em; background-color: #2A7889;" href="{% url 'my-classroom' %}" tabindex="-1">MY CLASSROOM</a>
+                  </li>
+                </ul>
+                <!-- <form class="d-flex">
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-success" type="submit">Search</button>
+                </form> -->
+              </div>
             </div>
           </nav>
+
+
+
+
+
+
+
       </header>
       <section>
         {% block content %}

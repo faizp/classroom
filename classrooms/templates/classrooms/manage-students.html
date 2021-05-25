@@ -26,7 +26,7 @@
         </div>
         <div class="col-md-4 text-center mt-5">
             <a href="{% url 'manage-students' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</a><br>
-            <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
+            <a href="{% url 'announcements' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
             <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
             <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</a>
             </div>

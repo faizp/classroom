@@ -1,0 +1,77 @@
+{% extends 'classrooms/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mt-2">
+            <h4>{{ classroom.title }}</h4>
+            <div style="justify-content: space-between; display: flex;">
+            <h5 class="text-muted">Announcements:</h5>
+            <button type="button" class="btn" style="color: #2A7889;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">+ADD ANNOUNCEMENTS</button>
+        </div>
+        {% for announcement in announcements %}
+        <div class="card shadow p-3 mt-1">
+            <p class="h6">{{ announcement.headline }} <span class="text-muted" style="float: right; font-size: 11px;">{{ announcement.date_posted }}</span></p>  
+        <div class="row p-3">  
+            <div class="col-md-12 border p-2">
+                {{ announcement.content }}
+            </div>
+            <!-- <div class="col-md-12">
+                <a href="" style="width: 10em; float: right;" class="btn btn-danger text-white mt-1">Review Report</a>
+            </div> -->
+        </div>
+    </div>
+    {% endfor %}
+        
+        <!-- <div class="card p-2 shadow rounded mt-2">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    
+                </div>
+                <div class="col-md-4">
+                    
+                </div>
+                <div class="col-md-4">
+
+                </div>
+            </div>
+        </div> -->
+        </div>
+        <div class="col-md-4 text-center mt-5">
+            <a href="{% url 'manage-students' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</a><br>
+            <a href="{% url 'announcements' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
+            <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
+            <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</a>
+        </div>
+    </div>
+    </div>
+
+
+
+    <!-- modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'add-announcement' classroom.id %}">{% csrf_token %}
+            <div class="modal-body">
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Announcement Subject:</label>
+                  <input type="text" maxlength="64" name="subject" class="form-control" id="recipient-name" required>
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Message:</label>
+                  <textarea class="form-control" name="message-text" maxlength="500" id="message-text" required></textarea>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Send message</button>
+              </div>
+            </div>  
+        </form>
+          </div>
+        </div>
+      </div>
+{% endblock %}
