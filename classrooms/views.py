@@ -43,12 +43,13 @@ def create_classroom(request):
 
 @login_required(login_url='login')
 def classroom_tutor(request, id):
-    classroom = Classroom.active_classrooms.get(id=id)
-    context = {
-        'classroom': classroom
-    }
-    return render(request, 'classrooms/classroom-tutor.html', context)
-
+    if Classroom.active_classrooms.get(id=id).user == request.user:
+        classroom = Classroom.active_classrooms.get(id=id)
+        context = {
+            'classroom': classroom
+        }
+        return render(request, 'classrooms/classroom-tutor.html', context)
+    return redirect('classroom-student', id)
 
 @login_required(login_url='login')
 def manage_days(request, id):
@@ -85,16 +86,18 @@ def join_classroom(request, id):
 
 def classroom_student(request, id):
     classroom = Classroom.active_classrooms.get(id=id)
-    if ClassroomEnrolled.objects.filter(user=request.user, classroom=classroom).exists():
-        classroom.classroom_status = 'enrolled'
-    else:
-        classroom.classroom_status = 'enroll'
-    classroom_enrolled = ClassroomEnrolled.objects.filter(classroom=classroom).count()
-    classroom.seats_left = classroom.students - classroom_enrolled
-    context = {
-        'classroom': classroom
-    }
-    return render(request, 'classrooms/classroom-student.html', context)
+    if classroom.user != request.user:
+        if ClassroomEnrolled.objects.filter(user=request.user, classroom=classroom).exists():
+            classroom.classroom_status = 'enrolled'
+        else:
+            classroom.classroom_status = 'enroll'
+        classroom_enrolled = ClassroomEnrolled.objects.filter(classroom=classroom).count()
+        classroom.seats_left = classroom.students - classroom_enrolled
+        context = {
+            'classroom': classroom
+        }
+        return render(request, 'classrooms/classroom-student.html', context)
+    return redirect('classroom-tutor', id)
 
 
 @login_required(login_url='login')
@@ -134,7 +137,6 @@ def enroll_classroom(request, id):
 def content(request, id):
     classroom = Classroom.active_classrooms.get(id=id)
     content = Day.objects.filter(classroom = classroom, publish=True).last()
-    print(content)
     context = {
         'content': content
     }

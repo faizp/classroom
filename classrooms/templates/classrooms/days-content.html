@@ -21,11 +21,43 @@
         </div>
         <div class="col-md-4 mt-5">
             <div class="col-12">
-            <button style="float: right; margin-left: 3px;" class="btn btn-danger mt-1"><i class="fa fa-exclamation-triangle"></i> Report this video</button><br>
+            <!-- <button type="button" data-toggle="modal" data-target="exampleModalCenter" style="float: right; margin-left: 3px;" class="btn btn-danger mt-1"></button><br> -->
             <!-- <button style="float: right;" class="btn btn-secondaryq mt-1">Previous Contents</button> -->
-            </div>
+                    <!-- Button trigger modal -->
+        
+            <button type="button" class="btn btn-danger mt-1" data-toggle="modal" style="float: right; margin-left: 3px;" data-target="#reportModal" data-whatever="@mdo"><i class="fa fa-exclamation-triangle"></i> Report this video</button>
+        </a><br>
+        </div>
             <h4>Description:</h4>
             <p>{{ content.description }}</p>
+        </div>
+        <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Report this video</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'report-video' content.id %}">{% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Subject:</label>
+                    <input type="text" name="subject" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Describe:</label>
+                    <textarea class="form-control" name="description" id="message-text"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i> Report</button>
+            </div>
+        </form>
+            </div>
+        </div>
         </div>
         {% endif %}
     </div>
