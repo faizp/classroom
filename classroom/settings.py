@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'admins.apps.AdminsConfig',
     'instructor_test.apps.InstructorTestConfig',
     'report.apps.ReportConfig',
+    'announcements.apps.AnnouncementsConfig',
 
     'crispy_forms',
 
