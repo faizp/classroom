@@ -25,9 +25,8 @@
                         {{ report.description }}
                     </div>
                     <div class="col-md-12">
-                        <button style="width: 10em; float: right;" class="btn btn-danger text-white mt-1">Review Report</button>
+                        <a href="{% url 'review-report' report.id %}" style="width: 10em; float: right;" class="btn btn-danger text-white mt-1">Review Report</a>
                     </div>
-                    
                 </div>
             </div>
         {% endif %}

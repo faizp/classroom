@@ -53,13 +53,15 @@ def classroom_tutor(request, id):
 
 @login_required(login_url='login')
 def manage_days(request, id):
-    classroom = Classroom.active_classrooms.get(id=id)
-    days = Day.objects.filter(classroom=classroom)
-    context = {
-        'classroom': classroom,
-        'days': days
-    }
-    return render(request, 'classrooms/manage-days.html', context)
+    if Classroom.active_classrooms.filter(id=id).exists():
+        classroom = Classroom.active_classrooms.get(id=id)
+        days = Day.objects.filter(classroom=classroom)
+        context = {
+            'classroom': classroom,
+            'days': days
+        }
+        return render(request, 'classrooms/manage-days.html', context)
+    return redirect('index')
 
 
 @login_required(login_url='login')
@@ -135,12 +137,14 @@ def enroll_classroom(request, id):
 
 @login_required(login_url='login')
 def content(request, id):
-    classroom = Classroom.active_classrooms.get(id=id)
-    content = Day.objects.filter(classroom = classroom, publish=True).last()
-    context = {
-        'content': content
-    }
-    return render(request, 'classrooms/days-content.html', context)
+    if Classroom.active_classrooms.filter(id=id).exists():
+        classroom = Classroom.active_classrooms.get(id=id)
+        content = Day.objects.filter(classroom = classroom, publish=True).last()
+        context = {
+            'content': content
+        }
+        return render(request, 'classrooms/days-content.html', context)
+    return redirect('index')
 
 
 @login_required(login_url='login')

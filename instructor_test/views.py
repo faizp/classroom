@@ -14,9 +14,11 @@ def teach(request):
         category = request.POST['category']
         sec_category = secCategory.objects.get(id=category)
         if TestPassed.objects.filter(sec_category=sec_category, user=request.user).exists():
+            request.session['secCategory'] = category
             return JsonResponse('passed', safe=False)
         if Questions.objects.filter(sec_category=sec_category).exists():
             request.session['secCategory'] = category
+            request.session['test'] = category
             return JsonResponse('true', safe=False)
         return JsonResponse('false', safe=False)
 
@@ -29,7 +31,7 @@ def teach(request):
 
 @login_required(login_url='login')
 def test(request):
-    if request.session.has_key('secCategory'):
+    if request.session.has_key('test'):
         if request.method == 'GET':
             print(Answer.objects.filter(question=3, correct='true'))
             category = request.session['secCategory']
@@ -75,13 +77,13 @@ def test(request):
 
 @login_required(login_url='login')
 def test_passed(request):
-    del request.session['secCategory']
+    del request.session['test']
     return render(request, 'instructor-test/test-passed.html')
 
 
 @login_required(login_url='login')
 def test_failed(request):
-    del request.session['secCategory']
+    del request.session['test']
     return render(request, 'instructor-test/test-failed.html')
 
 
