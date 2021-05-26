@@ -3,9 +3,11 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Category, secCategory, Classroom, Day, ClassroomEnrolled
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 def index(request):
+    print(timezone.now())
     if request.user.is_authenticated:
         classrooms = Classroom.active_classrooms.filter(started=False).exclude(user=request.user)
     else:
