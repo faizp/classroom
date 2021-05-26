@@ -27,8 +27,17 @@ def add_announcement(request, id):
 
 
 def all_announcements(request):
-    annoucements = AnnouncementUser.objects.filter(user=request.user).order_by('-date_posted')
+    announcements = AnnouncementUser.objects.filter(user=request.user).order_by('-pk') 
+    print(announcements)   
     context = {
-        'announcements': annoucements
+        'announcements': announcements
     }
-    return render(request, 'announcements/all-annoucements.html', context)
+    print(context)
+    return render(request, 'announcements/all-announcements.html', context)
+
+
+def mark_read(request, id):
+    announcement = AnnouncementUser.objects.get(id=id)
+    announcement.read = True
+    announcement.save()
+    return redirect('all-announcements')

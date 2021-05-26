@@ -32,39 +32,38 @@
                     <ul class="dropdown-menu" style="width: 30em;" aria-labelledby="navbarDropdown">
                       {% if announcements|length >= 1 %}
                           {% for announcement in announcements %}
-                          {% if not announcement.read %}
-                          <li class="p-1 bg-light" ><span class="text-success">{{ announcement.announcement.classroom.user }}</span>
-                            @ <span style="color: #2A7889;">{{ announcement.announcement.classroom.title }}</span>   <span style="float: right; font-size: 10px;" class="text-muted m-2">{{ announcement.announcement.date_posted }}</span>
-                            <div class="row">
-                            <div class="col-2">
-                              <img class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
-                            </div>
-                            <div class="col-10">
-                              {{ announcement.announcement.headline }}
-                            </div>
-                          </div>
-                      </li>
-                      <hr class="dropdown-divider">
-                          
-                            <!-- <li><a class="dropdown-item" href="#">{{ announcement.announcement.headline }}</a></li>
-                            <li><p style="white-space:pre-line" class="dropdown-item">{{ announcement.announcement.content }}</p></li>
-                            <li><hr class="dropdown-divider"></li> -->
-
-                            {% else %}
-                            <li class="p-1"><p>
-                              {{ announcement.announcement.classroom.user }}-{{ announcement.announcement.classroom.title }}    <span style="float: right; font-size: 10px;" class="text-muted m-2">{{ announcement.announcement.date_posted }}</span>
-                              <div class="row">
-                              <div class="col-2">
-                                <img class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
-                              </div>
-                              <div class="col-10">
-                                {{ announcement.announcement.headline }}
-                              </div>
-                            </div>
-                          </p>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        {% endif %}
+                            {% if not announcement.read %}
+                                <li class="p-1 bg-light" ><span class="text-success">{{ announcement.announcement.classroom.user }}</span>
+                                  @ <span style="color: #2A7889;">{{ announcement.announcement.classroom.title }}</span>   <span style="float: right; font-size: 10px;" class="text-muted m-2">{{ announcement.announcement.date_posted }}</span>
+                                    <div class="row">
+                                        <div class="col-2">
+                                          <img class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
+                                        </div>
+                                        <div class="col-10">
+                                          {{ announcement.announcement.headline }}
+                                        </div>
+                                    </div>
+                                    
+                                </li>
+                                <hr class="dropdown-divider">
+                                {% endif %}
+                                {% endfor %}
+                                {% for announcement in announcements %}
+                              {% if announcement.read %}
+                              <li class="p-1" ><span class="text-success text-muted">{{ announcement.announcement.classroom.user }}</span>
+                                @ <span class="text-muted" style="color: #2A7889;">{{ announcement.announcement.classroom.title }}</span>   <span style="float: right; font-size: 10px;" class="text-muted m-2">{{ announcement.announcement.date_posted }}</span>
+                                  <div class="row">
+                                      <div class="col-2">
+                                        <img class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
+                                      </div>
+                                      <div class="col-10 text-muted">
+                                        {{ announcement.announcement.headline }}
+                                      </div>
+                                  </div>
+                                  <hr class="dropdown-divider">
+                              </li>
+                                
+                             {% endif %}
                           
                         {% endfor %}
 
@@ -72,7 +71,7 @@
                       <li class="text-center">No Announcements</li>
                       {% endif %}
                       <div class="footer">
-                        <a style="text-decoration: none; float:right; margin-right: 3px;" href="">see all announcements</a>
+                        <a style="text-decoration: none; float:right; margin-right: 3px;" href="{% url 'all-announcements' %}">see all announcements</a>
                       </div>
                         </ul>
                       </li>

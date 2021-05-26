@@ -7,14 +7,12 @@ from django.utils import timezone
 
 
 def index(request):
-    print(timezone.now())
     if request.user.is_authenticated:
         classrooms = Classroom.active_classrooms.filter(started=False).exclude(user=request.user)
     else:
         classrooms = Classroom.active_classrooms.filter(started=False)
     for classroom in classrooms:
         students = ClassroomEnrolled.objects.filter(classroom = classroom).count()
-        print(students, classroom.students)
         if classroom.students <= students:
             classroom.full = True
         else:
@@ -35,7 +33,6 @@ def create_classroom(request):
         start_date = request.POST.get('start-date')
         student_number = request.POST.get('student-number')
         description = request.POST.get('description')
-        print(video, title, duration, language, start_date, student_number, description)
         category = request.session['secCategory']
         sec_category = secCategory.objects.get(id=category)
         classroom = Classroom.objects.create(user = request.user, sec_category=sec_category, title=title, students=student_number, language=language, start_date=start_date, duration=duration, description=description, video=video)
