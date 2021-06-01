@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Category, secCategory, Classroom, Day, ClassroomEnrolled
 from django.contrib.auth.models import User
 from django.utils import timezone
+from datetime import datetime
 
 
 def index(request):
@@ -55,6 +56,11 @@ def manage_days(request, id):
     if Classroom.active_classrooms.filter(id=id).exists():
         classroom = Classroom.active_classrooms.get(id=id)
         days = Day.objects.filter(classroom=classroom)
+        for day in days:
+            if day.publishing_day <= datetime.now():
+                day.publish = True
+            else:
+                day.publish = False
         context = {
             'classroom': classroom,
             'days': days
@@ -68,9 +74,10 @@ def add_day(request, id):
     if request.method == 'POST':
         video = request.FILES.get('video')
         title = request.POST.get('title')
+        publishing_day = request.POST.get('datetime-field')
         description = request.POST.get('description')
         classroom = Classroom.objects.get(pk=id)
-        Day.objects.create(classroom=classroom, video=video, video_title=title, description=description)
+        Day.objects.create(classroom=classroom, video=video, video_title=title, description=description, publishing_day=publishing_day)
         classroom.started = True
         classroom.save()
         return redirect('manage-days',id)
@@ -138,7 +145,8 @@ def enroll_classroom(request, id):
 def content(request, id):
     if Classroom.active_classrooms.filter(id=id).exists():
         classroom = Classroom.active_classrooms.get(id=id)
-        content = Day.objects.filter(classroom = classroom, publish=True).last()
+        content = Day.objects.filter(classroom = classroom, publishing_day__lte=datetime.now()).last()
+        print(content)
         context = {
             'content': content
         }

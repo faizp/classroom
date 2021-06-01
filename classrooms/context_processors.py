@@ -6,8 +6,8 @@ def add_variable_to_context(request):
         announcements = AnnouncementUser.objects.filter(user=request.user)
         
         return {
-            'announcements': announcements
+            'announcementss': announcements
         }
     return {
-        'announcements': 'announcements'
+        'announcementss': 'announcements'
         }

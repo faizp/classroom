@@ -3,110 +3,131 @@ from django.http import JsonResponse
 from classrooms.forms import CategoryForm
 from classrooms.models import Category, secCategory, Classroom, Day
 from django.core import serializers
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 
 # Create your views here.
 def admin_login(request):
-    if request.method == 'POST' :
-         if request.method == 'POST':
-            username = request.POST['username']
-            password = request.POST['password']
-            if username == 'admin' and password == 'admin':
-                request.session['password'] = password
-                return JsonResponse('true', safe=False)
-            else:
-                return JsonResponse('false', safe=False)
-    return render(request, 'admins/admin-login.html')
+    if not request.user.is_authenticated:
+        if request.method == 'POST' :
+            if request.method == 'POST':
+                username = request.POST['username']
+                password = request.POST['password']
+                user = authenticate(username=username, password=password, is_superuser=True)
+                if user is not None:
+                    login(request, user)
+                    request.session['password'] = password
+                    return JsonResponse('true', safe=False)
+                else:
+                    return JsonResponse('false', safe=False)
+        return render(request, 'admins/admin-login.html')
+    return redirect('admin-home')
+
 
 def admin_home(request):
-    return render(request, 'admins/dashboard.html')
+    if request.session.has_key('password'):
+        return render(request, 'admins/dashboard.html')
+    return redirect('admin-login')
 
 
 def add_category(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        print(form)
-        if form.is_valid():
-            form.save()
-            return redirect('add-category')
+    if request.session.has_key('password'):
+        if request.method == 'POST':
+            form = CategoryForm(request.POST)
+            print(form)
+            if form.is_valid():
+                form.save()
+                return redirect('add-category')
 
-    form = CategoryForm()
-    categories = Category.objects.all()
-    context = {
-        'form': form,
-        'categories': categories
-    }
-    return render(request, 'admins/category.html', context)
+        form = CategoryForm()
+        categories = Category.objects.all()
+        context = {
+            'form': form,
+            'categories': categories
+        }
+        return render(request, 'admins/category.html', context)
+    return redirect('admin-login')
 
 
 def add_sec_category(request):
-    if request.method == 'POST':
-        category_chosed = request.POST.get('chosed-category')
-        sec_category = request.POST.get('sec-category')
-        category = Category.objects.get(id=category_chosed)
-        secCategory.objects.create(category=category, name=sec_category)
+    if request.session.has_key('password'):
+        if request.method == 'POST':
+            category_chosed = request.POST.get('chosed-category')
+            sec_category = request.POST.get('sec-category')
+            category = Category.objects.get(id=category_chosed)
+            secCategory.objects.create(category=category, name=sec_category)
+            return redirect('add-category')
         return redirect('add-category')
-    return redirect('add-category')
+    return redirect('admin-login')
 
 
 def sec_category(request):
-    if request.method == 'POST':
-        category = request.POST['category']
-        category_selected = Category.objects.get(id=category)
-        result_category = secCategory.objects.filter(category=category_selected)
-        cateogories = serializers.serialize('json', result_category)
-        data = {
-            'categories': cateogories
-        }
-        return JsonResponse(data)
-    return JsonResponse('false', safe=False)
+    if request.session.has_key('password'):
+        if request.method == 'POST':
+            category = request.POST['category']
+            category_selected = Category.objects.get(id=category)
+            result_category = secCategory.objects.filter(category=category_selected)
+            cateogories = serializers.serialize('json', result_category)
+            data = {
+                'categories': cateogories
+            }
+            return JsonResponse(data)
+        return JsonResponse('false', safe=False)
+    return redirect('admin-login')
 
 
 def choose_category(request):
-    if request.method == 'POST':
-        category = request.POST['category']
-        sec_categories = secCategory.objects.filter(category=category)
-        data = {
-            'categories': serializers.serialize('json', sec_categories)
-        }
-        return JsonResponse(data)
-    return JsonResponse('false', safe=False)
+    if request.session.has_key('password'):
+        if request.method == 'POST':
+            category = request.POST['category']
+            sec_categories = secCategory.objects.filter(category=category)
+            data = {
+                'categories': serializers.serialize('json', sec_categories)
+            }
+            return JsonResponse(data)
+        return JsonResponse('false', safe=False)
+    return redirect('admin-login')
+
 
 
 def manage_classroom(request):
-    if request.method == 'POST':
+    if request.session.has_key('password'):
+        if request.method == 'POST':
+            categories = Category.objects.all()
+            id = request.POST.get('sub-category')
+            sec_category = secCategory.objects.get(id=id)
+            classrooms = Classroom.objects.filter(sec_category=sec_category)
+            for classroom in classrooms:
+                if classroom.started:
+                    day_count = Day.objects.filter(classroom = classroom, publish = True).count()
+                    classroom.status = day_count
+                else:
+                    classroom.status = 'Not Started'
+                    
+            context = {
+                'classrooms': classrooms,
+                'categories': categories
+            }
+            return render(request, 'admins/manage-classrooms.html', context)
+
         categories = Category.objects.all()
-        id = request.POST.get('sub-category')
-        sec_category = secCategory.objects.get(id=id)
-        classrooms = Classroom.objects.filter(sec_category=sec_category)
+        classrooms = Classroom.objects.all()
         for classroom in classrooms:
             if classroom.started:
                 day_count = Day.objects.filter(classroom = classroom, publish = True).count()
                 classroom.status = day_count
             else:
                 classroom.status = 'Not Started'
-                
+
         context = {
             'classrooms': classrooms,
             'categories': categories
         }
         return render(request, 'admins/manage-classrooms.html', context)
+    return redirect('admin-login')
 
-    categories = Category.objects.all()
-    classrooms = Classroom.objects.all()
-    for classroom in classrooms:
-        if classroom.started:
-            day_count = Day.objects.filter(classroom = classroom, publish = True).count()
-            classroom.status = day_count
-        else:
-            classroom.status = 'Not Started'
-
-    context = {
-        'classrooms': classrooms,
-        'categories': categories
-    }
-    return render(request, 'admins/manage-classrooms.html', context)
-        
 
 def delete_classroom(request, id):
     classroom = Classroom.objects.get(id=id)
@@ -126,3 +147,9 @@ def unblock_classroom(request, id):
     classroom.is_active = True
     classroom.save()
     return redirect('manage-classrooms')
+
+
+def logout_admin(request):
+    logout(request)
+    del request.session['password']
+    return redirect('admin-login')

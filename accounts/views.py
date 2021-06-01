@@ -52,7 +52,6 @@ def otp_login(request):
                                     from_='+12512700252',
                                     to='+'+phone
                                 )
-
                 print(message)
                 request.session['otp'] = otp
                 request.session['phone'] = phone

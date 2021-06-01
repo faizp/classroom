@@ -5,11 +5,13 @@ from report.models import ReportClassroom
 
 
 def manage_reports(request):
-    reports = ReportClassroom.objects.all()
-    context = {
-        'reports': reports
-    }
-    return render(request, 'report/report.html', context)
+    if request.session.has_key('password'):
+        reports = ReportClassroom.objects.all()
+        context = {
+            'reports': reports
+        }
+        return render(request, 'report/report.html', context)
+    return redirect('admin-login')
 
 
 def report(request, id):
@@ -22,11 +24,13 @@ def report(request, id):
 
 
 def review_report(request, id):
-    report = ReportClassroom.objects.get(id=id)
-    context = {
-        'report': report
-    }
-    return render(request, 'report/review-report.html', context)
+    if request.session.has_key('password'):
+        report = ReportClassroom.objects.get(id=id)
+        context = {
+            'report': report
+        }
+        return render(request, 'report/review-report.html', context)
+    return redirect('admin-login')
 
 
 def delete_reported_classroom(request, id):

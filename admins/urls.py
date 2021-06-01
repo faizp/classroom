@@ -12,5 +12,6 @@ urlpatterns = [
     path('manage-classrooms/', views.manage_classroom, name='manage-classrooms'),
     path('delete-classroom/<int:id>', views.delete_classroom, name='delete-classroom'),
     path('block-classroom/<int:id>', views.block_classroom, name='block-classroom'),
-    path('unblock-classroom/<int:id>', views.unblock_classroom, name='unblock-classroom')
+    path('unblock-classroom/<int:id>', views.unblock_classroom, name='unblock-classroom'),
+    path('logout/', views.logout_admin, name='admin-logout')
 ]

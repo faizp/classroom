@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 # Create your models here.
 class Category(models.Model):
@@ -33,7 +34,6 @@ class Classroom(models.Model):
     video = models.FileField(upload_to='preview_videos')
     started = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-
     objects = models.Manager()
     active_classrooms = ClassroomManager()
 
@@ -44,7 +44,7 @@ class Day(models.Model):
     video_title = models.CharField(max_length=64)
     description = models.CharField(max_length=2048)
     publish = models.BooleanField(default=False)
-    
+    publishing_day = models.DateTimeField(default=datetime.now)
 
 class ClassroomEnrolled(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -29,44 +29,38 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       ANNOUNCEMENTS
                     </a>
-                    <ul class="dropdown-menu" style="width: 30em;" aria-labelledby="navbarDropdown">
-                      {% if announcements|length >= 1 %}
-                          {% for announcement in announcements %}
+                    <ul class="dropdown-menu" style="width: 30em; padding: 0;" aria-labelledby="navbarDropdown">
+                      {% if announcementss|length >= 1 %}
+                          {% for announcement in announcementss %}
                             {% if not announcement.read %}
-                                <li class="p-1 bg-light" ><span class="text-success">{{ announcement.announcement.classroom.user }}</span>
+                                <li style="background-color: #c4def2;" class="p-1 border-bottom" ><span class="text-success">{{ announcement.announcement.classroom.user }}</span>
                                   @ <span style="color: #2A7889;">{{ announcement.announcement.classroom.title }}</span>   <span style="float: right; font-size: 10px;" class="text-muted m-2">{{ announcement.announcement.date_posted }}</span>
                                     <div class="row">
                                         <div class="col-2">
-                                          <img class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
+                                          <img style="width: 2em; height: 2em;" class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
                                         </div>
                                         <div class="col-10">
-                                          {{ announcement.announcement.headline }}
+                                          <a class="text-dark" style="text-decoration: none;" href="{% url 'classroom-student' announcement.announcement.classroom.id %}">{{ announcement.announcement.headline }}</a>
                                         </div>
-                                    </div>
-                                    
+                                    </div> 
                                 </li>
-                                <hr class="dropdown-divider">
                                 {% endif %}
                                 {% endfor %}
-                                {% for announcement in announcements %}
+                                {% for announcement in announcementss %}
                               {% if announcement.read %}
-                              <li class="p-1" ><span class="text-success text-muted">{{ announcement.announcement.classroom.user }}</span>
+                              <li class="p-1 border-bottom"><span class="text-success text-muted">{{ announcement.announcement.classroom.user }}</span>
                                 @ <span class="text-muted" style="color: #2A7889;">{{ announcement.announcement.classroom.title }}</span>   <span style="float: right; font-size: 10px;" class="text-muted m-2">{{ announcement.announcement.date_posted }}</span>
                                   <div class="row">
                                       <div class="col-2">
-                                        <img class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
+                                        <img style="width: 2em; height: 2em;" class="img-fluid rounded-circle" src="{{ announcement.announcement.classroom.user.profile.image_url }}" alt="">
                                       </div>
-                                      <div class="col-10 text-muted">
-                                        {{ announcement.announcement.headline }}
+                                      <div class="col-10">
+                                        <a class="text-muted" style="text-decoration: none;" href="{% url 'classroom-student' announcement.announcement.classroom.id %}">{{ announcement.announcement.headline }}</a>
                                       </div>
                                   </div>
-                                  <hr class="dropdown-divider">
-                              </li>
-                                
-                             {% endif %}
-                          
+                              </li>  
+                             {% endif %} 
                         {% endfor %}
-
                       {% else %}
                       <li class="text-center">No Announcements</li>
                       {% endif %}
@@ -89,7 +83,6 @@
                         <a class="nav-link btn text-white " style="width: 12em; background-color: #2A7889;" href="{% url 'my-classroom' %}" tabindex="-1">MY CLASSROOM</a>
                       </li>
                   {% else %}
-                  
                   <li class="nav-item">
                     <a href="{% url 'login' %}" class="btn" style="color: rgb(0, 0, 0);">SIGN IN</a>
                   </li>
@@ -101,13 +94,6 @@
               </div>
             </div>
           </nav>
-
-
-
-
-
-
-
       </header>
       <section>
         {% block content %}
@@ -121,7 +107,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     {% block script %}
     {% endblock %}
   </body>

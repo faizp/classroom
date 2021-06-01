@@ -12,16 +12,16 @@
         <div class="card p-2 shadow rounded mt-2">
             <div class="row text-center">
                 <div class="col-md-4">
-                    Day: {{forloop.counter}}
+                    Day: {{ forloop.counter }}
                 </div>
                 <div class="col-md-4">
                     {{ day.video_title }}
                 </div>
                 <div class="col-md-4">
                     {% if day.publish %}
-                    <button class="btn btn-success">PUBLISHED</button>
+                    <i class="fa fa-check-square text-success"></i><small class="text-success"> Content Published</small>
                     {% else %}
-                    <a href="{% url 'publish-content' day.id %}" class="btn btn-danger">PUBLISH</a>
+                    <i style="color: #eb9e34;" class="fa fa-history"></i><small style="color: #eb9e34;"> Scheduled: {{ day.publishing_day }}</small>
                     {% endif %}
                 </div>
             </div>
@@ -36,4 +36,16 @@
             </div>
     </div>
     </div>
+{% endblock %}
+{% block script %}
+<script>
+  function showModal() {
+    var val = $('#myselect').val()
+    console.log(val);
+    if (val == "2"){
+      $('#myModal').modal('show')
+    }
+   
+  }
+</script>
 {% endblock %}

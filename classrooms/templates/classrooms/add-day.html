@@ -25,6 +25,15 @@
             <label for="address2">Description<span class="text-muted"></span></label>
             <textarea rows='3' name="description" class="form-control" id="bio"></textarea>
           </div>
+          <label for="select">Choose Publishing Option</label>
+          <select onchange="showTime()" class="form-control" name="" id="myselect">
+            <option value="2">Publish now</option>
+            <option value="3">Scheduled Publish</option>
+          </select>
+          <div style="display: none; margin-top: 1em;" id="date-time">
+            <small class="text-muted">set date and time for publishing</small>
+            <input name="datetime-field" id="datetime-field" class="form-control" type="datetime-local">
+          </div>
           <hr class="mb-4">
           <div class="container">
           <button class="btn btn-lg btn-block" style="width: 100%; background-color: #2A7889; color: white;" type="submit">CREATE DAY</button>
@@ -58,5 +67,18 @@
           
           reader.readAsDataURL(files[0]);
         });
+    </script>
+    <script>
+      function showTime() {
+        var value = $('#myselect').val()
+        console.log(value);
+        if (value == "3"){
+          $('#date-time').show()
+          $('#datetime-field').prop('required', true)
+        } else {
+          $('#date-time').hide()
+          $('#datetime-field').prop('required', false)
+        }
+      }
     </script>
 {% endblock %} 
