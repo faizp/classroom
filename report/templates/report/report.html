@@ -17,19 +17,22 @@
 <div class="container-fluid">
     <h5>Pending Reports:</h5>
     {% for report in reports %}
-        {% if not report.resoved %}
             <div class="card shadow p-3 mt-1">
-                    <p class="h4">{{ report.subject }} <span class="text-muted" style="float: right; font-size: 11px;">{{ report.report_date }}</span></p>  
+                    <p class="h4">{{ report.subject }} <span class="text-muted" style="float: right; font-size: 11px;">{{ report.report_date }}</span>
+                        {% if report.message_status %}
+                         <span class="text-success" style="float: right; font-size: 12px; margin-right: 1em;"><i class="fa fa-check"></i> Response Recieved</span> 
+                        {% endif %}
+                        </p>  
                 <div class="row p-3">  
                     <div class="col-md-12 border p-2">
                         {{ report.description }}
                     </div>
                     <div class="col-md-12">
+                        <a href="{% url 'delete-report' report.id %}" style="width: 8em; float: right; margin-left: 3px;" class="btn btn-danger text-white mt-1 ">Delete</a>
                         <a href="{% url 'review-report' report.id %}" style="width: 10em; float: right;" class="btn btn-danger text-white mt-1">Review Report</a>
                     </div>
                 </div>
             </div>
-        {% endif %}
     {% endfor %}
 </div>
 

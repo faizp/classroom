@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Category, secCategory, Classroom, Day, ClassroomEnrolled
+from .models import Category, secCategory, Classroom, Day, ClassroomEnrolled, QuestionsQandA, ReplyQandA
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime
@@ -46,7 +46,7 @@ def classroom_tutor(request, id):
     if Classroom.active_classrooms.get(id=id).user == request.user:
         classroom = Classroom.active_classrooms.get(id=id)
         context = {
-            'classroom': classroom
+            'classroom': classroom,
         }
         return render(request, 'classrooms/classroom-tutor.html', context)
     return redirect('classroom-student', id)
@@ -63,7 +63,8 @@ def manage_days(request, id):
                 day.publish = False
         context = {
             'classroom': classroom,
-            'days': days
+            'days': days,
+           
         }
         return render(request, 'classrooms/manage-days.html', context)
     return redirect('index')
@@ -113,14 +114,14 @@ def my_classroom(request):
     classrooms_teaching = Classroom.objects.filter(user=request.user)
     for classroom in classrooms_teaching:
         if classroom.started:
-            day_count = Day.objects.filter(classroom = classroom, publish = True).count()
+            day_count = Day.objects.filter(classroom = classroom, publishing_day__lte=datetime.now()).count()
             classroom.status = day_count
         else:
             classroom.status = 'Not Started'
     classrooms_enrolled = ClassroomEnrolled.objects.filter(user=request.user)
     for classroom in classrooms_enrolled:
         if classroom.classroom.started:
-            day_count = Day.objects.filter(classroom=classroom.classroom, publish=True).count()
+            day_count = Day.objects.filter(classroom=classroom.classroom, publishing_day__lte=datetime.now()).count()
             classroom.classroom.status= day_count
         else:
             classroom.classroom.status = 'Not Started'
@@ -146,9 +147,12 @@ def content(request, id):
     if Classroom.active_classrooms.filter(id=id).exists():
         classroom = Classroom.active_classrooms.get(id=id)
         content = Day.objects.filter(classroom = classroom, publishing_day__lte=datetime.now()).last()
-        print(content)
+        questions = QuestionsQandA.objects.filter(classroom=classroom).order_by('-pk')
+        answers = ReplyQandA.objects.filter(classroom=classroom).order_by('-pk')
         context = {
-            'content': content
+            'content': content,
+            'questions': questions,
+            'answers': answers
         }
         return render(request, 'classrooms/days-content.html', context)
     return redirect('index')
@@ -160,7 +164,7 @@ def manage_students(request, id):
     students = ClassroomEnrolled.objects.filter(classroom=classroom)
     context = {
         'students': students,
-        'classroom': classroom
+        'classroom': classroom,
     }
     return render(request, 'classrooms/manage-students.html', context)
 
@@ -186,3 +190,69 @@ def delete_content(request, id):
     day = Day.objects.get(id=id)
     day.delete()
     return redirect('manage-days', day.classroom.id)
+
+
+def ask_question(request, id):
+    classroom = Classroom.objects.get(id=id)
+    question = request.POST.get('question')
+    QuestionsQandA.objects.create(classroom=classroom, question=question, user=request.user)
+    return redirect('content', id)
+
+
+def answer_question(request, id):
+    question = QuestionsQandA.objects.get(id=id)
+    answer = request.POST.get('answer')
+    ReplyQandA.objects.create(question=question, classroom=question.classroom, answer=answer, user=request.user)
+    return redirect('content', question.classroom.id)
+
+
+def q_and_a(request, id):
+    classroom = Classroom.objects.get(id=id)
+    questions = QuestionsQandA.objects.filter(classroom=classroom).order_by('-pk')
+    answers = ReplyQandA.objects.filter(classroom=classroom).order_by('-pk')
+    context = {
+        'classroom': classroom,
+        'questions': questions,
+        'answers': answers
+    }
+    return render(request, 'classrooms/qanda.html', context)
+
+
+def ask_question_tutor(request, id):
+    classroom = Classroom.objects.get(id=id)
+    question = request.POST.get('question')
+    QuestionsQandA.objects.create(classroom=classroom, question=question, user=request.user)
+    return redirect('q-and-a', id)
+
+
+def answer_question_tutor(request, id):
+    question = QuestionsQandA.objects.get(id=id)
+    answer = request.POST.get('answer')
+    ReplyQandA.objects.create(question=question, classroom=question.classroom, answer=answer, user=request.user)
+    return redirect('q-and-a', question.classroom.id)
+    
+
+def delete_question_tutor(request, id):
+    question = QuestionsQandA.objects.get(id=id)
+    question.delete()
+    return redirect('q-and-a', question.classroom.id)
+
+
+def delete_answer_tutor(request, id):
+    answer = ReplyQandA.objects.get(id=id)
+    answer.delete()
+    return redirect('q-and-a', answer.classroom.id)
+
+
+def delete_question(request, id):
+    question = QuestionsQandA.objects.get(id=id)
+    question.delete()
+    return redirect('content', question.classroom.id)
+
+
+def delete_answer(request, id):
+    answer = ReplyQandA.objects.get(id=id)
+    answer.delete()
+    return redirect('content', answer.classroom.id)
+
+ 

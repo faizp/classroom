@@ -22,11 +22,12 @@
         <div class="col-md-4 mt-5">
             <div class="col-12">
             <!-- <button type="button" data-toggle="modal" data-target="exampleModalCenter" style="float: right; margin-left: 3px;" class="btn btn-danger mt-1"></button><br> -->
-            <!-- <button style="float: right;" class="btn btn-secondaryq mt-1">Previous Contents</button> -->
                     <!-- Button trigger modal -->
         
             <button type="button" class="btn btn-danger mt-1" data-toggle="modal" style="float: right; margin-left: 3px;" data-target="#reportModal" data-whatever="@mdo"><i class="fa fa-exclamation-triangle"></i> Report this video</button>
-        </a><br>
+            <a href="#QandA" style="float: right;" class="btn btn-secondary mt-1">Q&A</a>
+
+        <br>
         </div>
             <h4>Description:</h4>
             <p>{{ content.description }}</p>
@@ -59,7 +60,95 @@
             </div>
         </div>
         </div>
+        <hr style="width: 100%;">
+        <section id="QandA">
+            
+            <h3>Q&A:</h3>
+            <div class="col-12">
+                <button type="button" class="btn mt-1 border-0 shadow" data-toggle="modal" style="float: right; width: 5em;" data-target="#questionModal" data-whatever="@mdo">Ask?</button>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    {% for question in questions %}
+                    <div class="card p-2 mt-1 shadow">
+                        <span class="border p-3">{{ question.question }}</span>
+                        <div>{% if question.user == question.classroom.user %}
+                                <small class="text-muted"> <span class="text-danger rounded-pill"><b> {{ question.user }}</b></span> | {{ question.date_posted }}</small>
+                                {% elif question.user == request.user %}
+                                <small class="text-muted"> <span class="text-success rounded-pill"><b> You</b></span> | {{ question.date_posted }} | <a style="text-decoration: none" class="text-muted" href="{% url 'delete-question' question.id %}">delete</a></small>
+                                {% else %}
+                                <small class="text-muted">{{ question.user }} | {{ question.date_posted }}</small>
+                                {% endif %}
+                                <small class="btn text-muted" onclick="showAnswers('{{ question.id }}')" style="float: right; font-size: 12px;"><i class="fa fa-chevron-down"></i>  Show Replies</small>
+                            <small onclick="reply('{{ question.id }}')" class="btn" style="float: right; font-size: 12px;"><i class="fa fa-reply"></i> reply </small>
+                        </div>
+                        <div style="display: none;" id="reply-section-{{ question.id }}" class="reply-section">
+                            <form method="POST" action="{% url 'answer-question' question.id %}">{% csrf_token %}
+                                <div class="form-group p-1">
+                                    <button style="float: right; margin-left: 5px;" type="submit" class="btn btn-secondary">Submit</button>
+                                    <input class="form-control" name="answer" style="width: 90%; float: right; border: none; border-bottom: 1px solid rgba(58, 56, 56, 0.438);" type="text" placeholder="write your Answer here..." required>
+                                </div>
+                            </form>
+                        </div>
+                        <div style="display: none;" id="answer-section-{{ question.id }}" class="answer-section">
+                            <div style="width: 90%; float: right;" class="border p-2 mt-2">
+                            {% for answer in answers %}
+                            {% if question.id == answer.question.id %}
+                                <div class="border-bottom p-2">{{ answer.answer }}</div>
+                                <div>{% if answer.user == answer.classroom.user %}
+                                    <small class="text-muted"> <span class="text-danger rounded-pill"><b> {{ answer.user }}</b></span> | {{ answer.date_posted }}</small>
+                                        {% elif answer.user == request.user %}
+                                        <small class="text-muted"> <span class="text-success rounded-pill"><b> You</b></span> | {{ answer.date_posted }} | <a style="text-decoration: none" class="text-muted" href="{% url 'delete-answer' answer.id %}">delete</a></small>
+                                        {% else %}
+                                        <small class="text-muted">{{ answer.user }} | {{ answer.date_posted }} </small>
+                                        {% endif %}
+                                    </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        <!-- Question Modal -->
+        <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ask Questions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{% url 'ask-question' content.classroom.id %}">{% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Write Your Question:</label>
+                        <textarea class="form-control" name="question" id="message-text" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-submit"></i>Submit</button>
+                </div>
+            </form>
+                </div>
+            </div>
+            </div>
         {% endif %}
     </div>
+   
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    function reply(id) {
+        $('#reply-section-'+id).toggle('slow')
+    }
+    function showAnswers(id) {
+        $('#answer-section-'+id).toggle()
+    }
+</script>
 {% endblock %}

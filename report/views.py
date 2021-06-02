@@ -7,6 +7,11 @@ from announcements.models import AnnouncementAdmin, MessageAdmin
 
 def manage_reports(request):
     reports = ReportClassroom.objects.all().order_by('-pk')
+    for report in reports:
+        if MessageAdmin.objects.filter(classroom=report.day.classroom).exists():
+            report.message_status = True
+        else:
+            report.message_status = False
     context = {
         'reports': reports
     }
@@ -24,9 +29,19 @@ def report(request, id):
 
 def review_report(request, id):
     report = ReportClassroom.objects.get(id=id)
-    context = {
-        'report': report
-    }
+    if MessageAdmin.objects.filter(classroom = report.day.classroom).exists():
+        response = MessageAdmin.objects.filter(classroom = report.day.classroom).first()
+        print(response)
+        report.response = True
+        context = {
+            'report': report,
+            'response': response
+        }
+    else:
+        report.response = False
+        context = {
+            'report': report
+        }
     return render(request, 'report/review-report.html', context)
 
 
@@ -61,10 +76,14 @@ def block_warn_classroom(request, id):
 def unblock_reported_classroom(request, id):
     report = ReportClassroom.objects.get(id=id)
     classroom = Classroom.objects.get(id=report.day.classroom.id)
+    annoucement_admin = AnnouncementAdmin.objects.filter(classroom=classroom)
+    message_admin = MessageAdmin.objects.filter(classroom=classroom)
     classroom.is_active = True
     classroom.save()
     report.delete()
-    return redirect('review-report', id)
+    annoucement_admin.delete()
+    message_admin.delete()
+    return redirect('reports')
 
 
 def reported_classroom(request, id):
@@ -88,3 +107,9 @@ def send_message_admin(request, id):
         message = request.POST.get('message')
         MessageAdmin.objects.create(classroom=classroom, content=message)
     return redirect('reported-classroom', id)
+
+
+def delete_report(request, id):
+    report = ReportClassroom.objects.get(id=id)
+    report.delete()
+    return redirect('reports')

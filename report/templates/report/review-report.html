@@ -27,7 +27,15 @@
             <h4>{{ report.day.video_title }}</h4>   
         </div>
         <div class="col-md-4 mt-5">
-            
+            {% if report.response %}
+            <span class="text-success btn" onclick="showResponse()"><i class="fa fa-check"></i> Response Recieved</span>
+                <section style="display: none;" id="response">
+                    <p>
+                        {{ response.content }}
+                    </p>
+                </section>
+            {% else %}
+            {% endif %}
             <div class="row">
             <!-- <button type="button" class="btn btn-danger mt-1 text-white" style="float: right; margin-left: 3px;"><i class="fa fa-exclamation-triangle"></i></button> -->
             <a href="{% url 'delete-reported-classroom' report.id %}" class="btn btn-danger mt-1 text-white" style="float: right; margin-left: 3px;">Delete Classroom</a>
@@ -37,7 +45,7 @@
                 Block Classroom and warn user
             </button>
             {% else %}
-            <a href="{% url 'unblock-classroom' report.day.classroom.id %}" class="btn btn-success text-white mt-1" style="float: right; margin-left: 3px;">Unblock Classroom</a>
+            <a href="{% url 'unblock-reported-classroom' report.id %}" class="btn btn-success text-white mt-1" style="float: right; margin-left: 3px;">Unblock Classroom</a>
             <small class="text-muted mt-1 mb-2">Nb: Unblocking Classroom will resolve this Report</small>
             {% endif %}
             <section id="message-section" style="display: none">
@@ -94,6 +102,12 @@
         $('#message-section').toggle('slow')
         $('#description').toggle('slow')
 
+    }
+</script>
+<script>
+    function showResponse() {
+        $('#response').toggle('slow')
+        $('#description').toggle('slow')
     }
 </script>
 {% endblock %}

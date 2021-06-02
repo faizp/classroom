@@ -4,10 +4,7 @@
     <div class="row">
         <div class="col-md-8 mt-2">
             <h4>{{ classroom.title }}</h4>
-            <div style="justify-content: space-between; display: flex;">
             <h5 class="text-muted">Manage Students:</h5>
-           
-        </div>
         {% for student in students %}
         <div class="card p-2 shadow rounded-pill mt-2">
             <div class="row ">
@@ -28,8 +25,10 @@
             <a href="{% url 'manage-students' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</a><br>
             <a href="{% url 'announcements' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
             <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
+            <a href="{% url 'q-and-a' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Q&A</a><br>
             <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</a>
-            </div>
+        </div>
     </div>
-    </div>
+</div>
 {% endblock %}
+

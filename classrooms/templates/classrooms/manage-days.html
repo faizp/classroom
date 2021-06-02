@@ -7,40 +7,43 @@
             <div style="justify-content: space-between; display: flex;">
             <h5 class="text-muted">Manage Days:</h5>
             <a style="text-decoration: none;" href="{% url 'add-new-day' classroom.id %}" class="text-success">+ADD NEW DAY</a>
-        </div>
-        {% for day in days %}
-        <div class="card p-2 shadow rounded mt-2">
-            <div class="row text-center">
-                <div class="col-md-2">
-                    Day: {{ forloop.counter }}
-                </div>
-                <div class="col-md-4">
-                    {{ day.video_title }}
-                </div>
-                <div class="col-md-3">
-                    {% if day.publish %}
-                    <i class="fa fa-check-square text-success"></i><small class="text-success"> Content Published</small>
-                    {% else %}
-                    <i style="color: #eb9e34;" class="fa fa-history"></i><small style="color: #eb9e34;"> Scheduled: {{ day.publishing_day }}</small>
-                    {% endif %}
-                </div>
-                <div class="col-md-3">
-                    <a class="text-danger" style="text-decoration: none;" href="{% url 'delete-content' day.id %}">
-                    <i class="fa fa-close "></i><small> Remove Content</small>
-                </a>
+            </div>
+            {% for day in days %}
+            <div class="card p-2 shadow rounded mt-2">
+                <div class="row text-center">
+                    <div class="col-md-2">
+                        Day: {{ forloop.counter }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ day.video_title }}
+                    </div>
+                    <div class="col-md-3">
+                        {% if day.publish %}
+                        <i class="fa fa-check-square text-success"></i><small class="text-success"> Content Published</small>
+                        {% else %}
+                        <i style="color: #eb9e34;" class="fa fa-history"></i><small style="color: #eb9e34;"> Scheduled: {{ day.publishing_day }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <a class="text-danger" style="text-decoration: none;" href="{% url 'delete-content' day.id %}">
+                        <i class="fa fa-close "></i><small> Remove Content</small>
+                    </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
         </div>
         <div class="col-md-4 text-center mt-5">
-        <a href="{% url 'manage-students' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</a><br>
-        <a href="{% url 'announcements' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
-        <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
-        <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</a>
-            </div>
+            <a href="{% url 'manage-students' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</a><br>
+            <a href="{% url 'announcements' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
+            <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
+            <a href="{% url 'q-and-a' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Q&A</a><br>
+            <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</a>
+        </div>
     </div>
-    </div>
+
+</div>
+</div>
 {% endblock %}
 {% block script %}
 <script>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from classrooms.models import Classroom, Day, ClassroomEnrolled
+from classrooms.models import Classroom, Day, ClassroomEnrolled, QuestionsQandA, ReplyQandA
 from . models import Announcement, AnnouncementUser
 
 
@@ -7,10 +7,14 @@ from . models import Announcement, AnnouncementUser
 def announcements(request, id):
     if Classroom.objects.filter(id=id).exists():
         classroom = Classroom.objects.get(id=id)
-        announcements = Announcement.objects.filter(classroom = classroom).order_by('-date_posted')[:5]
+        announcements = Announcement.objects.filter(classroom = classroom).order_by('-date_posted')
+        questions = QuestionsQandA.objects.filter(classroom=classroom).order_by('-pk')
+        answers = ReplyQandA.objects.filter(classroom=classroom).order_by('-pk')
         context = {
             'classroom': classroom,
-            'announcements': announcements
+            'announcements': announcements,
+            'questions': questions,
+            'answers': answers
         }
     return render(request, 'announcements/announcements.html', context)
 

@@ -50,3 +50,18 @@ class ClassroomEnrolled(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 
+
+class QuestionsQandA(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    question = models.CharField(max_length=512)
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+
+class ReplyQandA(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
+    question = models.ForeignKey(QuestionsQandA, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=512)
+    correct = models.BooleanField(default=False)
+    date_posted = models.DateTimeField(auto_now_add=True)

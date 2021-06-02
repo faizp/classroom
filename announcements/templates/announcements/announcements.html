@@ -40,13 +40,10 @@
             <a href="{% url 'manage-students' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn rounded text-white shadow-lg">Manage Students</a><br>
             <a href="{% url 'announcements' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Announcements</a><br>
             <a href="{% url 'manage-days' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Manage Days</a><br>
+            <a href="{% url 'q-and-a' classroom.id %}" style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Q&A</a><br>
             <a style="background-color: #2A7889; width: 15em;" class="btn mt-3 rounded text-white shadow-lg">Live Class</a>
         </div>
     </div>
-    </div>
-
-
-
     <!-- modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -73,5 +70,9 @@
         </form>
           </div>
         </div>
-      </div>
+    </div>
+    
+  </div>
+</div>
 {% endblock %}
+
