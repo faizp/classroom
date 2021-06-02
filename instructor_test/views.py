@@ -143,21 +143,17 @@ def add_question(request):
 
 
 def instructor_test(request):
-    if request.session.has_key('password'):
-        categories = Category.objects.all()
-        context = {
-            'categories': categories
-        }
-        return render(request, 'instructor-test/instructor-test.html', context)
-    return redirect('admin-login')
+    categories = Category.objects.all()
+    context = {
+        'categories': categories
+    }
+    return render(request, 'instructor-test/instructor-test.html', context)
 
 
 def category_test(request, id):
-    if request.session.has_key('password'):
-        category = Category.objects.get(id=id)
-        categories = secCategory.objects.filter(category=category)
-        context = {
-            'categories': categories
-        }
-        return render(request, 'instructor-test/category-test.html', context)
-    return redirect('admin-login')
+    category = Category.objects.get(id=id)
+    categories = secCategory.objects.filter(category=category)
+    context = {
+        'categories': categories
+    }
+    return render(request, 'instructor-test/category-test.html', context)

@@ -110,7 +110,7 @@ def classroom_student(request, id):
 
 @login_required(login_url='login')
 def my_classroom(request):
-    classrooms_teaching = Classroom.active_classrooms.filter(user=request.user)
+    classrooms_teaching = Classroom.objects.filter(user=request.user)
     for classroom in classrooms_teaching:
         if classroom.started:
             day_count = Day.objects.filter(classroom = classroom, publish = True).count()
@@ -179,4 +179,10 @@ def publish_day(request, id):
     day = Day.objects.get(id=id)
     day.publish = True
     day.save()
+    return redirect('manage-days', day.classroom.id)
+
+
+def delete_content(request, id):
+    day = Day.objects.get(id=id)
+    day.delete()
     return redirect('manage-days', day.classroom.id)

@@ -19,15 +19,23 @@
                     </div>
                     <div class="col-5"><h6>{{ classroom.title }}</h6>
                         <h6>status: 
-                            {% if classroom.started %}
-                            Day: <span class="text-success">{{ classroom.status }}</span> 
+                            {% if classroom.is_active %}
+                                {% if classroom.started %}
+                                Day: <span class="text-success">{{ classroom.status }}</span> 
+                                {% else %}
+                                <span class="text-warning">{{ classroom.status }}</span>
+                                {% endif %}
                             {% else %}
-                            <span class="text-warning">{{ classroom.status }}</span>
+                                <span class="text-danger">Classroom is Blocked</span>
                             {% endif %}
                         </h6>
                     </div>
                     <div class="col-md-4">
-                        <a href="{% url 'classroom-tutor' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em; background-color: #2A7889;" class="btn text-white rounded-pill">ENTER CLASSROOM</a>
+                        {% if classroom.is_active %}
+                        <a href="{% url 'classroom-student' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em; background-color: #2A7889;" class="btn rounded-pill text-white">ENTER CLASSROOM</a>
+                        {% else %}
+                        <a href="{% url 'reported-classroom' classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em; background-color: #2A7889;" class="btn rounded-pill text-white">ENTER CLASSROOM</a>
+                        {% endif %}                    
                     </div>
                 </div>
             </div>
@@ -47,18 +55,22 @@
                     </div>
                     <div class="col-5"><h6>{{ classroom.classroom.title }}</h6>
                         <h6>status: 
-                            {% if classroom.classroom.started %}
-                            Day: <span class="text-success">{{ classroom.classroom.status }}</span> 
+                            {% if classroom.classroom.is_active %}
+                                {% if classroom.classroom.started %}
+                                Day: <span class="text-success">{{ classroom.classroom.status }}</span> 
+                                {% else %}
+                                <span class="text-warning">{{ classroom.classroom.status }}</span>
+                                {% endif %}
                             {% else %}
-                            <span class="text-warning">{{ classroom.classroom.status }}</span>
-                            {% endif %}
+                            <span class="text-danger">Classroom is Blocked</span>
+                        {% endif %}
                         </h6>
                     </div>
                     <div class="col-md-4">
                         {% if classroom.classroom.is_active %}
                         <a href="{% url 'classroom-student' classroom.classroom.id %}" style="width: 100%; top: 50%; margin-top: 1em; background-color: #2A7889;" class="btn rounded-pill text-white">ENTER CLASSROOM</a>
                         {% else %}
-                        <a class="btn btn-danger mt-1">CLASSROOM UNAVAILABLE</a>
+                        <button class="btn">Classroom Unavailable</button>
                         {% endif %}
                     </div>
                 </div>

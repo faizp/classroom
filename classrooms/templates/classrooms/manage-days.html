@@ -11,18 +11,23 @@
         {% for day in days %}
         <div class="card p-2 shadow rounded mt-2">
             <div class="row text-center">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     Day: {{ forloop.counter }}
                 </div>
                 <div class="col-md-4">
                     {{ day.video_title }}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     {% if day.publish %}
                     <i class="fa fa-check-square text-success"></i><small class="text-success"> Content Published</small>
                     {% else %}
                     <i style="color: #eb9e34;" class="fa fa-history"></i><small style="color: #eb9e34;"> Scheduled: {{ day.publishing_day }}</small>
                     {% endif %}
+                </div>
+                <div class="col-md-3">
+                    <a class="text-danger" style="text-decoration: none;" href="{% url 'delete-content' day.id %}">
+                    <i class="fa fa-close "></i><small> Remove Content</small>
+                </a>
                 </div>
             </div>
         </div>

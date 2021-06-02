@@ -18,6 +18,7 @@
     <div class="row">
         <div class="col-md-8 mt-2">
             <h5 style="font-family: cursive; color: #2A7889;">Reported Course Content:</h5>
+            <small class="text-muted mb-3">{{ report.day.classroom.title }}</small>
             <div class="embed-responsive embed-responsive-16by9"> 
                 <video class="video-fluid"  id="video-player" width="100%" controls>
                     <source src="{{ report.day.video.url }}" type="video/mp4">
@@ -26,13 +27,40 @@
             <h4>{{ report.day.video_title }}</h4>   
         </div>
         <div class="col-md-4 mt-5">
+            
             <div class="row">
             <!-- <button type="button" class="btn btn-danger mt-1 text-white" style="float: right; margin-left: 3px;"><i class="fa fa-exclamation-triangle"></i></button> -->
             <a href="{% url 'delete-reported-classroom' report.id %}" class="btn btn-danger mt-1 text-white" style="float: right; margin-left: 3px;">Delete Classroom</a>
             <a href="{% url 'delete-block-reported-classroom' report.id %}" class="btn btn-danger mt-1 text-white" style="float: right; margin-left: 3px;">Delete Classroom & Remove Tutor Access</a>
+            {% if report.day.classroom.is_active %}
+            <button onclick="showMessageSection()" style="float: right; margin-left: 3px;" class="btn btn-warning dropdown-toggle mt-1 text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Block Classroom and warn user
+            </button>
+            {% else %}
+            <a href="{% url 'unblock-classroom' report.day.classroom.id %}" class="btn btn-success text-white mt-1" style="float: right; margin-left: 3px;">Unblock Classroom</a>
+            <small class="text-muted mt-1 mb-2">Nb: Unblocking Classroom will resolve this Report</small>
+            {% endif %}
+            <section id="message-section" style="display: none">
+                <form method="POST" action="{% url 'block-warn-classroom' report.id %}">{% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Subject:</label>
+                            <input type="text" name="subject" class="form-control" id="recipient-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Describe:</label>
+                            <textarea class="form-control" name="description" id="message-text" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger text-white">Submit</button>
+                    </div>
+                </form>
+            </section>
             <br>
         </div>
         <div class="row">
+            
             <div class="col-4 text-center">
                 <p>
                     <span class="text-muted">instructor:</span><br><i class="fa fa-graduation-cap mt-2"></i><span style="margin-left: 3px;">{{ report.day.classroom.user }}</span>
@@ -51,12 +79,21 @@
                 </p>
             </div>
         </div>
+        <div id="description">
             <h4>Description:</h4>
             <p>{{ report.day.description }}</p>
+        </div>
         </div>
         
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    function showMessageSection() {
+        $('#message-section').toggle('slow')
+        $('#description').toggle('slow')
 
-
+    }
+</script>
 {% endblock %}
