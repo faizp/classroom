@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'instructor_test.apps.InstructorTestConfig',
     'report.apps.ReportConfig',
     'announcements.apps.AnnouncementsConfig',
+    'chat.apps.ChatConfig',
 
     'crispy_forms',
 
