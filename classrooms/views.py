@@ -75,10 +75,13 @@ def add_day(request, id):
     if request.method == 'POST':
         video = request.FILES.get('video')
         title = request.POST.get('title')
-        publishing_day = request.POST.get('datetime-field')
+        publishing_day = request.POST.get('datetime-field')    
         description = request.POST.get('description')
         classroom = Classroom.objects.get(pk=id)
-        Day.objects.create(classroom=classroom, video=video, video_title=title, description=description, publishing_day=publishing_day)
+        if publishing_day == "":
+            Day.objects.create(classroom=classroom, video=video, video_title=title, description=description, publishing_day=datetime.now())
+        else:
+            Day.objects.create(classroom=classroom, video=video, video_title=title, description=description, publishing_day=publishing_day)
         classroom.started = True
         classroom.save()
         return redirect('manage-days',id)
