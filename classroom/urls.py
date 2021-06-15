@@ -28,6 +28,7 @@ urlpatterns = [
     path('test/', include('instructor_test.urls')),
     path('report/', include('report.urls')),
     path('announcements/', include('announcements.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 if settings.DEBUG:

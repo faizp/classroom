@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'announcements.apps.AnnouncementsConfig',
     'chat.apps.ChatConfig',
 
+
+    'channels',
     'crispy_forms',
 
     'django.contrib.sites',
@@ -169,3 +171,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+
+# Channels
+ASGI_APPLICATION = 'classroom.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
