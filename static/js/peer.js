@@ -24,6 +24,7 @@ var localDisplayStream = new MediaStream();
 
 // buttons to toggle self audio and video
 btnToggleAudio = document.querySelector("#btn-toggle-audio");
+console.log(btnToggleAudio)
 btnToggleVideo = document.querySelector("#btn-toggle-video");
 
 var messageInput = document.querySelector('#msg');
@@ -38,20 +39,20 @@ var recording = false;
 
 var file;
 
-document.getElementById('share-file-button').addEventListener('click', () => {
-    document.getElementById('select-file-dialog').style.display = 'block';
-});
+// document.getElementById('share-file-button').addEventListener('click', () => {
+//     document.getElementById('select-file-dialog').style.display = 'block';
+// });
   
-document.getElementById('cancel-button').addEventListener('click', () => {
-    document.getElementById('select-file-input').value = '';
-    document.getElementById('select-file-dialog').style.display = 'none';
-    document.getElementById('ok-button').disabled = true;
-});
+// document.getElementById('cancel-button').addEventListener('click', () => {
+//     document.getElementById('select-file-input').value = '';
+//     document.getElementById('select-file-dialog').style.display = 'none';
+//     document.getElementById('ok-button').disabled = true;
+// });
   
-document.getElementById('select-file-input').addEventListener('change', (event) => {
-    file = event.target.files[0];
-    document.getElementById('ok-button').disabled = !file;
-});
+// document.getElementById('select-file-input').addEventListener('change', (event) => {
+//     file = event.target.files[0];
+//     document.getElementById('ok-button').disabled = !file;
+// });
 
 // ul of messages
 var ul = document.querySelector("#message-list");
@@ -71,8 +72,7 @@ console.log('endpointsane',endPoint);
 
 var webSocket;
 
-var usernameInput = document.querySelector('#username');
-var username;
+var username =  document.getElementById('userName').text;
 
 var btnJoin = document.querySelector('#btn-join');
 
@@ -80,18 +80,7 @@ var btnJoin = document.querySelector('#btn-join');
 // join room (initiate websocket connection)
 // upon button click
 btnJoin.onclick = () => {
-    username = usernameInput.value;
-
-    if(username == ''){
-        // ignore if username is empty
-        return;
-    }
-
-    // clear input
-    usernameInput.value = '';
-    // disable and vanish input
     btnJoin.disabled = true;
-    usernameInput.style.visibility = 'hidden';
     // disable and vanish join button
     btnJoin.disabled = true;
     btnJoin.style.visibility = 'hidden';
@@ -290,21 +279,21 @@ userMedia = navigator.mediaDevices.getUserMedia(constraints)
         btnToggleAudio.onclick = function(){
             audioTracks[0].enabled = !audioTracks[0].enabled;
             if(audioTracks[0].enabled){
-                btnToggleAudio.innerHTML = 'Audio Mute';
+                btnToggleAudio.innerHTML = '<i class="fa fa-microphone-slash"></i>';
                 return;
             }
             
-            btnToggleAudio.innerHTML = 'Audio Unmute';
+            btnToggleAudio.innerHTML = '<i class="fa fa-microphone"></i>';
         };
 
         btnToggleVideo.onclick = function(){
             videoTracks[0].enabled = !videoTracks[0].enabled;
             if(videoTracks[0].enabled){
-                btnToggleVideo.innerHTML = 'Video Off';
+                btnToggleVideo.innerHTML = '<i class="bi bi-camera-video-off-fill"></i>';
                 return;
             }
 
-            btnToggleVideo.innerHTML = 'Video On';
+            btnToggleVideo.innerHTML = '<i class="bi bi-camera-video-fill"></i>';
         };
     })
     .then(e => {
@@ -748,6 +737,9 @@ function createVideo(peerUsername){
     // var btnPlayRemoteVideo = document.createElement('button');
 
     remoteVideo.id = peerUsername + '-video';
+    remoteVideo.class = 'video-fluid'
+    remoteVideo.style.maxHeight = '10em'
+    remoteVideo.style.maxWidth = '10em'
     remoteVideo.autoplay = true;
     remoteVideo.playsinline = true;
     // btnPlayRemoteVideo.id = peerUsername + '-btn-play-remote-video';
@@ -820,4 +812,9 @@ function removeVideo(video){
     var videoWrapper = video.parentNode;
     // remove it
     videoWrapper.parentNode.removeChild(videoWrapper);
+}
+
+function endVideo(){
+    webSocket.close()
+    window.location.replace('/')
 }

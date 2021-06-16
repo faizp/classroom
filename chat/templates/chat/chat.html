@@ -1,35 +1,50 @@
-{% extends 'classrooms/base.html' %}
 {% load static %}
-{% block content %}
-<section>
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/3a8a70d7a6.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="shortcut icon" href="#">
+    <title>Live Meet</title>
+  </head>
+  <body style="overflow-x: hidden;">
+<section style="height: 90vh; background-color: black;">
+    <a style="display: none;" id="userName">{{ user }}</a>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-9">
-                <h3 id="label-username">USERNAME</h3>
+            <div class="col-md-10" style="height: 85vh; overflow: auto;">
+                <h3 id="label-username"></h3>
                 <div>
-                    <input id="username"><button id="btn-join">Join Room</button>
+                    <button id="btn-join">Join Room</button>
                 </div>
                 <div id="video-container">
                     <div class="embed-responsive embed-responsive-16by9">
-                        <video class="video-fluid" id="local-video" style="width: 100%; max-height: 40em;" autoplay playsinline></video>
+                        <video class="video-fluid rounded" id="local-video" style="max-height: 10em; max-width: 10em; float: left;" autoplay playsinline></video>
                     </div>
-                    <button id="btn-toggle-audio" class="btn btn-dark">Audio Mute</button>
-                    <button id="btn-toggle-video" class="btn btn-dark">Video Off</button>
+                    
                 </div>
             </div>
-            <div class="col-md-3">
-                <div id="chat">
-                    <h3> CHAT </h3>
+            <div style="background-color: rgb(0, 0, 0);" class="col-md-2">
+                <div class="card rounded" style="height: 70vh; background-color: white; justify-content: space-between; overflow: auto; margin-top: 3em;" id="chat">
                     <div id="messages">
                         <ul id="message-list"></ul>
                     </div>
-                    <div id="ct"><input id="msg"><button id="btn-send-msg">send</button></div>
-                    <button style="display: none;" id="btn-share-screen">Share Screen</button>
-                    
-                    <button id="btn-record-screen">Record Screen</button>
-                    
-                    <button class="view-button" id="share-file-button">Share File</button>
-                    <div id="select-file-dialog" style="display: none;">
+                    <div>
+                        <div id="ct" style="display: flex; margin-top: 2em;">
+                            <input class="form-control" style="border-width: 1px; border-color: black;" id="msg">
+                            <button class="btn rounded border-dark" style="color: rgb(0, 0, 0); background-color: white;" id="btn-send-msg"><i class="fa fa-paper-plane"></i></button>
+                        </div>
+                        <button style="display: none;" id="btn-share-screen">Share Screen</button>
+                    </div>
+                </div>
+                
+                    <!-- <button class="view-button" id="share-file-button">Share File</button> -->
+                    <!-- <div id="select-file-dialog" style="display: none;">
                         <div id="dialog-content">
                         <div id="select-file">
                             <div id="label">Select a file:</div>
@@ -40,14 +55,26 @@
                             <button id="cancel-button" class="cancel-button">Cancel</button>
                         </div>
                         </div>
-                    </div>
-                </div>
+                    </div> -->
             </div>
         </div>
     </div>
 </section>
-{% endblock %}
-{% block script %}
-<script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
-<script type="text/javascript" src="{% static 'js/peer.js' %}"></script>
-{% endblock %}
+<footer class="footer text-center" style="height: 5em; position: fixed; left: 0; bottom: 0; width: 100%; z-index: 1;">
+    <div style="margin-top: 1em;">
+    <button id="btn-toggle-audio" style="font-size: 1.5em;" class="btn shadow-lg text-dark"><i class="fa fa-microphone-slash"></i></button>
+    <button id="btn-toggle-video" style="font-size: 1.5em;" class="btn shadow-lg text-dark"><i class="bi bi-camera-video-off-fill"></i>
+    </button>
+    <button onclick="endVideo()" class="btn btn-danger rounded-circle"><i class="bi bi-telephone-x-fill"></i></button>
+    <button class="btn rounded shadow-lg" style="font-size: 1.5em;" id="btn-record-screen"><i class="bi bi-camera-reels-fill"></i></button>
+</div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+    <script type="text/javascript" src="{% static 'js/peer.js' %}"></script>
+  </body>
+</html>
