@@ -22,6 +22,9 @@ var localStream = new MediaStream();
 // for screen sharing
 var localDisplayStream = new MediaStream();
 
+// show meeting Link
+var linkDiv = document.querySelector('#meet-link')
+linkDiv.innerHTML = window.location.href;
 // buttons to toggle self audio and video
 btnToggleAudio = document.querySelector("#btn-toggle-audio");
 console.log(btnToggleAudio)
@@ -224,9 +227,25 @@ btnSendMsg.onclick = btnSendMsgOnClick;
 
 function btnSendMsgOnClick(){
     var message = messageInput.value;
-    
+    var date_send = new Date();
+    console.log(date_send.getMinutes())
     var li = document.createElement("li");
-    li.appendChild(document.createTextNode("Me: " + message));
+    var messageDiv = document.createElement('div');
+    var para = document.createElement('p')
+    var myname = document.createElement('strong')
+    myname.innerHTML = 'ME '
+    myname.style.fontStyle = 'bold'
+    var time = document.createElement('small')
+    var hours = date_send.getHours()
+    var minutes = date_send.getMinutes()
+    var br = document.createElement('br')
+    time.append(hours+':'+minutes)
+    messageDiv.appendChild(myname)
+    messageDiv.appendChild(time)
+    messageDiv.appendChild(br)
+    messageDiv.append(message)
+    messageDiv.appendChild(document.createElement('hr'))
+    li.appendChild(messageDiv)    
     ul.appendChild(li);
     
     var dataChannels = getDataChannels();
@@ -235,7 +254,7 @@ function btnSendMsgOnClick(){
 
     // send to all data channels
     for(index in dataChannels){
-        dataChannels[index].send(username + ': ' + message);
+        dataChannels[index].send(username + ':' + message);
     }
     
     messageInput.value = '';
