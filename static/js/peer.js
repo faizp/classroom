@@ -75,6 +75,8 @@ var webSocket;
 var username =  document.getElementById('userName').text;
 
 var btnJoin = document.querySelector('#btn-join');
+var btnEndCall = document.querySelector('#end-call-btn')
+
 
 // set username
 // join room (initiate websocket connection)
@@ -83,10 +85,10 @@ btnJoin.onclick = () => {
     btnJoin.disabled = true;
     // disable and vanish join button
     btnJoin.disabled = true;
-    btnJoin.style.visibility = 'hidden';
-
-    document.querySelector('#label-username').innerHTML = username;
-
+    btnJoin.style.display = 'none';
+    btnEndCall.style.display = 'inline';
+    localVideo.style.maxHeight = '20em';
+    localVideo.style.maxWidth = '20em';
     console.log(endPoint);
     webSocket = new WebSocket(endPoint);
 
@@ -279,21 +281,21 @@ userMedia = navigator.mediaDevices.getUserMedia(constraints)
         btnToggleAudio.onclick = function(){
             audioTracks[0].enabled = !audioTracks[0].enabled;
             if(audioTracks[0].enabled){
-                btnToggleAudio.innerHTML = '<i class="fa fa-microphone-slash"></i>';
+                btnToggleAudio.innerHTML = '<i class="fa fa-microphone"></i>';
                 return;
             }
             
-            btnToggleAudio.innerHTML = '<i class="fa fa-microphone"></i>';
+            btnToggleAudio.innerHTML = '<i class="fa fa-microphone-slash"></i>';
         };
 
         btnToggleVideo.onclick = function(){
             videoTracks[0].enabled = !videoTracks[0].enabled;
             if(videoTracks[0].enabled){
-                btnToggleVideo.innerHTML = '<i class="bi bi-camera-video-off-fill"></i>';
+                btnToggleVideo.innerHTML = '<i class="bi bi-camera-video-fill"></i>';
                 return;
             }
 
-            btnToggleVideo.innerHTML = '<i class="bi bi-camera-video-fill"></i>';
+            btnToggleVideo.innerHTML = '<i class="bi bi-camera-video-off-fill"></i>';
         };
     })
     .then(e => {
@@ -359,7 +361,7 @@ userMedia = navigator.mediaDevices.getUserMedia(constraints)
                 // toggle recording
                 recording = !recording;
 
-                btnRecordScreen.innerHTML = 'Record Screen';
+                btnRecordScreen.innerHTML = '<i class="bi bi-camera-reels-fill"></i>';
 
                 recorder.stopRecording(function() {
                     var blob = recorder.getBlob();
@@ -730,6 +732,7 @@ function getPeers(peerStorageObj){
 // assign ids corresponding to the username of the remote peer
 function createVideo(peerUsername){
     var videoContainer = document.querySelector('#video-container');
+    console.log(peerUsername)
     
     // create the new video element
     // and corresponding user gesture button
@@ -737,9 +740,10 @@ function createVideo(peerUsername){
     // var btnPlayRemoteVideo = document.createElement('button');
 
     remoteVideo.id = peerUsername + '-video';
-    remoteVideo.class = 'video-fluid'
-    remoteVideo.style.maxHeight = '10em'
-    remoteVideo.style.maxWidth = '10em'
+    remoteVideo.className = 'video-fluid';
+    remoteVideo.classList += ' rounded'
+    remoteVideo.style.maxHeight = '20em';
+    remoteVideo.style.maxWidth = '20em';
     remoteVideo.autoplay = true;
     remoteVideo.playsinline = true;
     // btnPlayRemoteVideo.id = peerUsername + '-btn-play-remote-video';
@@ -747,10 +751,17 @@ function createVideo(peerUsername){
 
     // wrapper for the video and button elements
     var videoWrapper = document.createElement('div');
+    var peerName = document.createElement('small');
+    peerName.innerHTML = peerUsername
+    peerName.style.color = 'white'
+    
+    videoWrapper.style.maxHeight = '20em'
+    videoWrapper.style.maxWidth = '20em'
+    videoWrapper.style.marginTop = '10px'
 
     // add the wrapper to the video container
     videoContainer.appendChild(videoWrapper);
-
+    videoWrapper.appendChild(peerName)
     // add the video to the wrapper
     videoWrapper.appendChild(remoteVideo);
     // videoWrapper.appendChild(btnPlayRemoteVideo);

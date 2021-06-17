@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from chat import views as chat_views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -24,5 +25,6 @@ urlpatterns = [
     path('delete-question-tutor/<int:id>', views.delete_question_tutor, name='delete-question-tutor'),
     path('delete-answer-tutor/<int:id>', views.delete_answer_tutor, name='delete-answer-tutor'),
     path('delete-question/<int:id>', views.delete_question, name='delete-question'),
-    path('delete-answer/<int:id>', views.delete_answer, name='delete-answer')
+    path('delete-answer/<int:id>', views.delete_answer, name='delete-answer'),
+    path('live-class/', chat_views.live_class, name='live-class')
 ]

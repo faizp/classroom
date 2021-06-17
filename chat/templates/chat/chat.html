@@ -13,30 +13,28 @@
     <title>Live Meet</title>
   </head>
   <body style="overflow-x: hidden;">
-<section style="height: 90vh; background-color: black;">
-    <a style="display: none;" id="userName">{{ user }}</a>
+<section style="height: 90vh; background-color:rgba(0, 0, 0, 0.932);">
     <div class="container-fluid">
         <div class="row">
+            <a id="userName" style="display: none;">{{ user }}</a>
             <div class="col-md-10" style="height: 85vh; overflow: auto;">
-                <h3 id="label-username"></h3>
-                <div>
-                    <button id="btn-join">Join Room</button>
-                </div>
                 <div id="video-container">
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <video class="video-fluid rounded" id="local-video" style="max-height: 10em; max-width: 10em; float: left;" autoplay playsinline></video>
+                    <div style="max-height: 20em; max-width: 20em;" class="embed-responsive">
+                        <small class="text-white">{{ user }}</small><br>
+                        <video class="video-fluid rounded" id="local-video" style="max-height: 60em; max-width: 60em; float:left; background-color: grey;" autoplay playsinline></video>
                     </div>
                     
                 </div>
             </div>
-            <div style="background-color: rgb(0, 0, 0);" class="col-md-2">
-                <div class="card rounded" style="height: 70vh; background-color: white; justify-content: space-between; overflow: auto; margin-top: 3em;" id="chat">
-                    <div id="messages">
-                        <ul id="message-list"></ul>
+            <div class="col-md-2">
+                <h6 style="margin-top: 3em; color: white;">Chat with other peers:</h6>
+                <div class="card rounded" style="height: 70vh; background-color: white; justify-content: space-between; overflow: auto;" id="chat">
+                    <div style="margin-top: 1em;" id="messages">
+                        <ul style="list-style-type: none;" id="message-list"></ul>
                     </div>
                     <div>
                         <div id="ct" style="display: flex; margin-top: 2em;">
-                            <input class="form-control" style="border-width: 1px; border-color: black;" id="msg">
+                            <input class="form-control" style="border-width: 1px; border-color: black;" placeholder="Type your message..." id="msg">
                             <button class="btn rounded border-dark" style="color: rgb(0, 0, 0); background-color: white;" id="btn-send-msg"><i class="fa fa-paper-plane"></i></button>
                         </div>
                         <button style="display: none;" id="btn-share-screen">Share Screen</button>
@@ -60,12 +58,12 @@
         </div>
     </div>
 </section>
-<footer class="footer text-center" style="height: 5em; position: fixed; left: 0; bottom: 0; width: 100%; z-index: 1;">
+<footer class="footer text-center" style="height: 5em;bottom: 0; width: 100%; z-index: 1;">
     <div style="margin-top: 1em;">
-    <button id="btn-toggle-audio" style="font-size: 1.5em;" class="btn shadow-lg text-dark"><i class="fa fa-microphone-slash"></i></button>
-    <button id="btn-toggle-video" style="font-size: 1.5em;" class="btn shadow-lg text-dark"><i class="bi bi-camera-video-off-fill"></i>
-    </button>
-    <button onclick="endVideo()" class="btn btn-danger rounded-circle"><i class="bi bi-telephone-x-fill"></i></button>
+    <button id="btn-toggle-audio" style="font-size: 1.5em;" class="btn shadow-lg text-dark"><i class="fa fa-microphone"></i></button>
+    <button id="btn-toggle-video" style="font-size: 1.5em;" class="btn shadow-lg text-dark"><i class="bi bi-camera-video-fill"></i></button>
+    <button id="btn-join" class="btn btn-success">Join Room</button>
+    <button id="end-call-btn" style="display: none;" onclick="endVideo()" class="btn btn-danger rounded-circle"><i class="bi bi-telephone-x-fill"></i></button>
     <button class="btn rounded shadow-lg" style="font-size: 1.5em;" id="btn-record-screen"><i class="bi bi-camera-reels-fill"></i></button>
 </div>
 </footer>
