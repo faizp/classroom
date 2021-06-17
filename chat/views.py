@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 import string
 import random
 import uuid 
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+@login_required(login_url='login')
 def peer(request, room_name):
     # get numb turn info
     # context = get_turn_info()
@@ -12,6 +13,7 @@ def peer(request, room_name):
     return render(request, 'chat/chat.html', context=context)
 
 
+@login_required(login_url='login')
 def live_class(request):
     room_name = generate_room_name()
     return redirect('peer', room_name)
