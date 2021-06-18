@@ -22,9 +22,6 @@ var localStream = new MediaStream();
 // for screen sharing
 var localDisplayStream = new MediaStream();
 
-// show meeting Link
-var linkDiv = document.querySelector('#meet-link')
-linkDiv.innerHTML = window.location.href;
 // buttons to toggle self audio and video
 btnToggleAudio = document.querySelector("#btn-toggle-audio");
 console.log(btnToggleAudio)
@@ -41,12 +38,6 @@ var recorder;
 var recording = false;
 
 var file;
-
-const configeration = {
-    'iceServers': [{
-        'url': 'stun:stun.1.google.com:19302'
-    }]
-};
 
 // document.getElementById('share-file-button').addEventListener('click', () => {
 //     document.getElementById('select-file-dialog').style.display = 'block';
@@ -84,8 +75,6 @@ var webSocket;
 var username =  document.getElementById('userName').text;
 
 var btnJoin = document.querySelector('#btn-join');
-var btnEndCall = document.querySelector('#end-call-btn')
-
 
 // set username
 // join room (initiate websocket connection)
@@ -94,10 +83,10 @@ btnJoin.onclick = () => {
     btnJoin.disabled = true;
     // disable and vanish join button
     btnJoin.disabled = true;
-    btnJoin.style.display = 'none';
-    btnEndCall.style.display = 'inline';
-    localVideo.style.maxHeight = '20em';
-    localVideo.style.maxWidth = '20em';
+    btnJoin.style.visibility = 'hidden';
+
+    document.querySelector('#label-username').innerHTML = username;
+
     console.log(endPoint);
     webSocket = new WebSocket(endPoint);
 
@@ -233,25 +222,9 @@ btnSendMsg.onclick = btnSendMsgOnClick;
 
 function btnSendMsgOnClick(){
     var message = messageInput.value;
-    var date_send = new Date();
-    console.log(date_send.getMinutes())
+    
     var li = document.createElement("li");
-    var messageDiv = document.createElement('div');
-    var para = document.createElement('p')
-    var myname = document.createElement('strong')
-    myname.innerHTML = 'ME '
-    myname.style.fontStyle = 'bold'
-    var time = document.createElement('small')
-    var hours = date_send.getHours()
-    var minutes = date_send.getMinutes()
-    var br = document.createElement('br')
-    time.append(hours+':'+minutes)
-    messageDiv.appendChild(myname)
-    messageDiv.appendChild(time)
-    messageDiv.appendChild(br)
-    messageDiv.append(message)
-    messageDiv.appendChild(document.createElement('hr'))
-    li.appendChild(messageDiv)    
+    li.appendChild(document.createTextNode("Me: " + message));
     ul.appendChild(li);
     
     var dataChannels = getDataChannels();
@@ -260,7 +233,7 @@ function btnSendMsgOnClick(){
 
     // send to all data channels
     for(index in dataChannels){
-        dataChannels[index].send(username + ':' + message);
+        dataChannels[index].send(username + ': ' + message);
     }
     
     messageInput.value = '';
@@ -309,7 +282,6 @@ userMedia = navigator.mediaDevices.getUserMedia(constraints)
                 btnToggleAudio.innerHTML = '<i class="fa fa-microphone"></i>';
                 return;
             }
-            
             btnToggleAudio.innerHTML = '<i class="fa fa-microphone-slash"></i>';
         };
 
@@ -386,7 +358,7 @@ userMedia = navigator.mediaDevices.getUserMedia(constraints)
                 // toggle recording
                 recording = !recording;
 
-                btnRecordScreen.innerHTML = '<i class="bi bi-camera-reels-fill"></i>';
+                btnRecordScreen.innerHTML = 'Record Screen';
 
                 recorder.stopRecording(function() {
                     var blob = recorder.getBlob();
@@ -442,7 +414,7 @@ function sendSignal(action, message){
 // and store it and its datachannel
 // send sdp to remote peer after gathering is complete
 function createOfferer(peerUsername, localScreenSharing, remoteScreenSharing, receiver_channel_name){
-    var peer = new RTCPeerConnection(configeration);
+    var peer = new RTCPeerConnection(null);
     
     // add local user media stream tracks
     addLocalTracks(peer, localScreenSharing);
@@ -557,7 +529,7 @@ function createOfferer(peerUsername, localScreenSharing, remoteScreenSharing, re
 // and store it and its datachannel
 // send sdp to remote peer after gathering is complete
 function createAnswerer(offer, peerUsername, localScreenSharing, remoteScreenSharing, receiver_channel_name){
-    var peer = new RTCPeerConnection(configeration);
+    var peer = new RTCPeerConnection(null);
 
     addLocalTracks(peer, localScreenSharing);
 
@@ -757,7 +729,6 @@ function getPeers(peerStorageObj){
 // assign ids corresponding to the username of the remote peer
 function createVideo(peerUsername){
     var videoContainer = document.querySelector('#video-container');
-    console.log(peerUsername)
     
     // create the new video element
     // and corresponding user gesture button
@@ -765,10 +736,9 @@ function createVideo(peerUsername){
     // var btnPlayRemoteVideo = document.createElement('button');
 
     remoteVideo.id = peerUsername + '-video';
-    remoteVideo.className = 'video-fluid';
-    remoteVideo.classList += ' rounded'
-    remoteVideo.style.maxHeight = '20em';
-    remoteVideo.style.maxWidth = '20em';
+    remoteVideo.class = 'video-fluid'
+    remoteVideo.style.maxHeight = '10em'
+    remoteVideo.style.maxWidth = '10em'
     remoteVideo.autoplay = true;
     remoteVideo.playsinline = true;
     // btnPlayRemoteVideo.id = peerUsername + '-btn-play-remote-video';
@@ -776,17 +746,10 @@ function createVideo(peerUsername){
 
     // wrapper for the video and button elements
     var videoWrapper = document.createElement('div');
-    var peerName = document.createElement('small');
-    peerName.innerHTML = peerUsername
-    peerName.style.color = 'white'
-    
-    videoWrapper.style.maxHeight = '20em'
-    videoWrapper.style.maxWidth = '20em'
-    videoWrapper.style.marginTop = '10px'
 
     // add the wrapper to the video container
     videoContainer.appendChild(videoWrapper);
-    videoWrapper.appendChild(peerName)
+
     // add the video to the wrapper
     videoWrapper.appendChild(remoteVideo);
     // videoWrapper.appendChild(btnPlayRemoteVideo);
