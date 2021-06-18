@@ -22,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secret.sec
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -32,10 +31,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ["143.110.246.81",]
 
 ROOT_URLCONF = f'{config("PROJECT_NAME")}.urls'
-
-WSGI_APPLICATION = f'{config("PROJECT_NAME")}.wsgi.application'
-
-ASGI_APPLICATION = f'{config("PROJECT_NAME")}.routing.application'
 
 
 # Application definition
@@ -99,6 +94,8 @@ TEMPLATES = [
 ]
 
 
+WSGI_APPLICATION = 'classroom.wsgi.application'
+ASGI_APPLICATION = 'classroom.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
