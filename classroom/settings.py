@@ -96,7 +96,7 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'classroom.wsgi.application'
-ASGI_APPLICATION = 'classroom.asgi.application'
+ASGI_APPLICATION = 'classroom.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
